@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mapFragment"
+        android:title="@string/map" />
+
+    <item
+        android:id="@+id/groupFragment"
+        android:title="@string/group" />
+
+    <item
+        android:id="@+id/myPageFragment"
+        android:title="@string/my_page" />
+</menu>
