@@ -36,6 +36,8 @@ android {
     viewBinding = true
     dataBinding = true
   }
+
+
 }
 
 dependencies {
@@ -47,6 +49,9 @@ dependencies {
   implementation("androidx.constraintlayout:constraintlayout:2.1.4")
   implementation("androidx.fragment:fragment-ktx:1.3.6")
   implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+  implementation ("com.kakao.sdk:v2-all:2.20.1")
+  implementation("com.google.android.gms:play-services-maps:18.2.0") // 전체 모듈 설치, 2.11.0 버전부터 지원
+  implementation ("com.kakao.maps.open:android:2.9.5")
 
 
   //test
@@ -77,4 +82,7 @@ dependencies {
   // tedPermission
   implementation("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
   implementation("io.github.ParkSangGwon:tedpermission-coroutine:3.3.0")
+
+  // kakao
+  implementation ("com.kakao.sdk:v2-user:2.10.0")
 }
