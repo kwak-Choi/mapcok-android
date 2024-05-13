@@ -12,6 +12,6 @@ import com.mapcok.ui.base.BaseFragment
 
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
     override fun initView() {
-        TODO("Not yet implemented")
+
     }
 }
