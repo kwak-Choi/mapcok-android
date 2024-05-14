@@ -3,10 +3,14 @@ package com.mapcok.ui.map
 import android.content.Context.LOCATION_SERVICE
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.inputmethodservice.Keyboard.Row
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.Nullable
+import androidx.core.content.ContextCompat
 
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
@@ -17,18 +21,23 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.clustering.ClusteringKey
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import ted.gun0912.clustering.naver.TedNaverClustering
 
 private const val TAG = "MapFragment_싸피"
-class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback,
-    ClusteringKey {
+
+class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var mapView: MapFragment
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
+
+    val clusterer: Clusterer<PhotoItem> = Clusterer.Builder<PhotoItem>().build()
+    val builder = Clusterer.Builder<PhotoItem>()
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,20 +46,25 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun initMapView() {
-        mapView = childFragmentManager.findFragmentById(R.id.map_view) as MapFragment? ?:
-                MapFragment.newInstance().also {
-                    childFragmentManager.beginTransaction().replace(R.id.map_view,it).commit()
-                }
+        mapView = childFragmentManager.findFragmentById(R.id.map_view) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                childFragmentManager.beginTransaction().replace(R.id.map_view, it).commit()
+            }
 
         mapView.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
-                grantResults)) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (locationSource.onRequestPermissionsResult(
+                requestCode, permissions,
+                grantResults
+            )
+        ) {
             if (!locationSource.isActivated) { // 권한 거부됨
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
@@ -116,39 +130,75 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     private fun setMarkers() {
-        // Define marker positions
         val markerPositions = listOf(
             LatLng(37.5670135, 126.9783740),
             LatLng(37.566671, 126.977656),
             LatLng(37.566121, 126.977069)
-            //사진의 위도 경도를 가져와 리스트로 표시
+            // 사진의 위도 경도를 가져와 리스트로 표시
         )
 
-        
-        //마커로 표시
-        for (position in markerPositions) {
-            val marker = Marker()
-            val resizedBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.photomarker), 200, 200, false)
-            marker.position = position
-            marker.icon = OverlayImage.fromBitmap(resizedBitmap)
-            marker.map = naverMap
+        val keyTagMap = mapOf(
+            PhotoItem(1, LatLng(37.372, 127.113)) to null,
+            PhotoItem(2, LatLng(37.366, 127.106)) to null,
+            PhotoItem(3, LatLng(37.365, 127.157)) to null,
+            PhotoItem(4, LatLng(37.361, 127.105)) to null,
+            PhotoItem(5, LatLng(37.368, 127.110)) to null,
+            PhotoItem(6, LatLng(37.360, 127.106)) to null,
+            PhotoItem(7, LatLng(37.363, 127.111)) to null
+        )
+        clusterer.addAll(keyTagMap)
+
+
+        val rows: List<PhotoItem> = markerPositions.map { latLng ->
+            PhotoItem(latLng.latitude, latLng.longitude)
         }
-    }
-    override fun getPosition() = position
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
-        val itemKey = other as ItemKey
-        return id == itemKey.id
+        clusterer.map = naverMap
+
+        builder.minZoom(4).maxZoom(16)
+
+
+
+
+
+
+
+//        TedNaverClustering.with<PhotoItem>(requireContext(), naverMap)
+//            .customMarker { photoItem ->
+//                Marker().apply {
+//                    val resizedBitmap = Bitmap.createScaledBitmap(
+//                        BitmapFactory.decodeResource(
+//                            resources,
+//                            R.drawable.photomarker
+//                        ), 200, 200, false
+//                    )
+//                    icon = OverlayImage.fromBitmap(resizedBitmap)
+//                    position = photoItem.position
+//                    map = naverMap
+//                }
+//            }
+////            .customCluster { // 클러스터 View 를 원하는 모양으로 변경
+////                TextView(requireContext()).apply {
+////                    setBackgroundColor(Color.GREEN)
+////                    setTextColor(Color.WHITE)
+////                    text = "${it.size}개"
+////                    setPadding(15, 15, 15, 15)
+////                }
+////            }
+//            .clusterBuckets(clusterBuckets)
+//            .clickToCenter(true)
+//            .minClusterSize(2)
+//            .items(rows)
+//            .make()
     }
 
-    override fun hashCode() = id
+
+
 
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-    }
+    private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+}
 
 
 }
