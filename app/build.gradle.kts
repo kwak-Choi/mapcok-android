@@ -82,5 +82,5 @@ dependencies {
   implementation("io.github.ParkSangGwon:tedpermission-coroutine:3.3.0")
 
   implementation("com.naver.maps:map-sdk:3.18.0")
-  implementation ("com.google.android.gms:play-services-location:20.0.0")
+  implementation("com.google.android.gms:play-services-location:21.0.1")
 }
