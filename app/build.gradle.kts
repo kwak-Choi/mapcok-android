@@ -2,6 +2,7 @@ plugins {
   id("com.android.application")
   id("org.jetbrains.kotlin.android")
   kotlin("kapt")
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -77,4 +78,9 @@ dependencies {
   // tedPermission
   implementation("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
   implementation("io.github.ParkSangGwon:tedpermission-coroutine:3.3.0")
+
+  //google
+  implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+  implementation("com.google.firebase:firebase-auth-ktx")
+  implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">MapCok</string>
+  <string name="app_name">MapCok</string>
 
 
-    <string name="map">지도</string>
-    <string name="group">그룹</string>
-    <string name="my_page">마이페이지</string>
+  <string name="map">지도</string>
+  <string name="group">그룹</string>
+  <string name="my_page">마이페이지</string>
 </resources>

@@ -28,4 +28,6 @@ abstract class BaseActivity<T : ViewDataBinding>(private val layoutResId: Int) :
         _binding = null
     }
 
+
+
 }

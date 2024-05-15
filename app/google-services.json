@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "975755915582",
+    "project_id": "mapcok-9c76c",
+    "storage_bucket": "mapcok-9c76c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975755915582:android:e8aa93d998340e8dd47c6f",
+        "android_client_info": {
+          "package_name": "com.mapcok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975755915582-t9iuei0da4bapmq1hqm66e7no0us2q5i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mapcok",
+            "certificate_hash": "33402b205c2d4c4c179a0449ed9d11f0f5e0bd53"
+          }
+        },
+        {
+          "client_id": "975755915582-06tiuui7nafpq9m7vtrn2kckl6vfbk0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqyJqMD5scA8qSdXiePzN56FMrF9m_ePw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975755915582-06tiuui7nafpq9m7vtrn2kckl6vfbk0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
