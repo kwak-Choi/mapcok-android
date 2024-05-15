@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.inputmethodservice.Keyboard.Row
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.Nullable
@@ -21,11 +22,17 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.clustering.ClusterMarkerInfo
 import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.clustering.ClusteringKey
+import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
+import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
+import com.naver.maps.map.clustering.LeafMarkerInfo
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import ted.gun0912.clustering.naver.TedNaverClustering
 
 private const val TAG = "MapFragment_싸피"
@@ -37,7 +44,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private lateinit var naverMap: NaverMap
 
     val clusterer: Clusterer<PhotoItem> = Clusterer.Builder<PhotoItem>().build()
-    val builder = Clusterer.Builder<PhotoItem>()
+    private val builder = Clusterer.Builder<PhotoItem>()
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -127,15 +134,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         setMarkers()
 
+
     }
 
     private fun setMarkers() {
-        val markerPositions = listOf(
-            LatLng(37.5670135, 126.9783740),
-            LatLng(37.566671, 126.977656),
-            LatLng(37.566121, 126.977069)
-            // 사진의 위도 경도를 가져와 리스트로 표시
-        )
 
         val keyTagMap = mapOf(
             PhotoItem(1, LatLng(37.372, 127.113)) to null,
@@ -146,59 +148,36 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             PhotoItem(6, LatLng(37.360, 127.106)) to null,
             PhotoItem(7, LatLng(37.363, 127.111)) to null
         )
-        clusterer.addAll(keyTagMap)
-
-
-        val rows: List<PhotoItem> = markerPositions.map { latLng ->
-            PhotoItem(latLng.latitude, latLng.longitude)
-        }
-
-        clusterer.map = naverMap
 
         builder.minZoom(4).maxZoom(16)
+        builder.clusterMarkerUpdater(object : DefaultClusterMarkerUpdater() {
+            override fun updateClusterMarker(info: ClusterMarkerInfo, marker: Marker) {
+                super.updateClusterMarker(info, marker)
+                marker.icon = if (info.size < 2) {
+                    MarkerIcons.CLUSTER_LOW_DENSITY
+                } else {
+                    MarkerIcons.CLUSTER_MEDIUM_DENSITY
+                }
+            }
+        }).leafMarkerUpdater(object : DefaultLeafMarkerUpdater() {
+            override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
+                super.updateLeafMarker(info, marker)
+                marker.icon = OverlayImage.fromResource(R.drawable.photomarker)
+                marker.width = 220
+                marker.height = 220
+            }
+        })
 
+        val clusterer = builder.build()
+        clusterer.addAll(keyTagMap)
+        clusterer.map = naverMap
 
-
-
-
-
-
-//        TedNaverClustering.with<PhotoItem>(requireContext(), naverMap)
-//            .customMarker { photoItem ->
-//                Marker().apply {
-//                    val resizedBitmap = Bitmap.createScaledBitmap(
-//                        BitmapFactory.decodeResource(
-//                            resources,
-//                            R.drawable.photomarker
-//                        ), 200, 200, false
-//                    )
-//                    icon = OverlayImage.fromBitmap(resizedBitmap)
-//                    position = photoItem.position
-//                    map = naverMap
-//                }
-//            }
-////            .customCluster { // 클러스터 View 를 원하는 모양으로 변경
-////                TextView(requireContext()).apply {
-////                    setBackgroundColor(Color.GREEN)
-////                    setTextColor(Color.WHITE)
-////                    text = "${it.size}개"
-////                    setPadding(15, 15, 15, 15)
-////                }
-////            }
-//            .clusterBuckets(clusterBuckets)
-//            .clickToCenter(true)
-//            .minClusterSize(2)
-//            .items(rows)
-//            .make()
     }
 
 
-
-
-
     companion object {
-    private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-}
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
 
 
 }
