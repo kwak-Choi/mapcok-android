@@ -11,7 +11,5 @@
         android:layout_height="match_parent"
         tools:context=".ui.group.GroupFragment">
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
