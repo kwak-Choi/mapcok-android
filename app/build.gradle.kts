@@ -2,6 +2,7 @@ plugins {
   id("com.android.application")
   id("org.jetbrains.kotlin.android")
   kotlin("kapt")
+  id("com.google.gms.google-services")
 }
 
 android {
@@ -80,8 +81,16 @@ dependencies {
   // tedPermission
   implementation("io.github.ParkSangGwon:tedpermission-normal:3.3.0")
   implementation("io.github.ParkSangGwon:tedpermission-coroutine:3.3.0")
+
   implementation ("io.github.ParkSangGwon:tedclustering-naver:1.0.2")
 
   implementation("com.naver.maps:map-sdk:3.18.0")
   implementation("com.google.android.gms:play-services-location:21.0.1")
+
+
+  //google
+  implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+  implementation("com.google.firebase:firebase-auth-ktx")
+  implementation("com.google.android.gms:play-services-auth:20.7.0")
+
 }
