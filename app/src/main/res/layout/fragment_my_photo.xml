@@ -17,14 +17,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/black"
         >
 
 
         <ImageView
             android:id="@+id/image"
             imageDrawable="@{photoDto.src}"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="50dp"
-            android:src="@drawable/mimitaya"
+            android:src="@drawable/kokage"
             app:civ_border_color="#FF7C81"
             app:civ_border_overlay="true"
             app:civ_border_width="2dp"
@@ -75,7 +75,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="50dp"
             android:fontFamily="@font/pretendard_semibold"
-            android:text="토사키 미미"
+            android:text="츠무기 코카게"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/image"

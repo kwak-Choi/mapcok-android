@@ -22,7 +22,7 @@
             app:civ_border_width="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/mimitaya"  />
+            android:src="@drawable/kokage"  />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mypage_photo_recycler"
@@ -42,7 +42,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="50dp"
             android:fontFamily="@font/pretendard_semibold"
-            android:text="토사키 미미"
+            android:text="츠무기 코카게"
             android:textSize="25sp"
             app:layout_constraintStart_toEndOf="@+id/profile_image"
             app:layout_constraintTop_toTopOf="parent" />
