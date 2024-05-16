@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 
@@ -18,6 +19,9 @@ import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -33,7 +37,6 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
-import ted.gun0912.clustering.naver.TedNaverClustering
 
 private const val TAG = "MapFragment_싸피"
 
@@ -43,7 +46,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
 
-    val clusterer: Clusterer<PhotoItem> = Clusterer.Builder<PhotoItem>().build()
     private val builder = Clusterer.Builder<PhotoItem>()
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
@@ -150,10 +152,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         )
 
         builder.minZoom(4).maxZoom(16)
+
+
         builder.clusterMarkerUpdater(object : DefaultClusterMarkerUpdater() {
             override fun updateClusterMarker(info: ClusterMarkerInfo, marker: Marker) {
                 super.updateClusterMarker(info, marker)
-                marker.icon = if (info.size < 2) {
+                marker.icon = if (info.size < 3) {
                     MarkerIcons.CLUSTER_LOW_DENSITY
                 } else {
                     MarkerIcons.CLUSTER_MEDIUM_DENSITY
@@ -165,6 +169,25 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 marker.icon = OverlayImage.fromResource(R.drawable.photomarker)
                 marker.width = 220
                 marker.height = 220
+                marker.onClickListener = Overlay.OnClickListener {
+                    if (it is Marker) {
+
+                        val photoItem = keyTagMap.keys.find { item -> item.position == it.position }
+                        val id = photoItem?.id
+                        Log.d(TAG, "Clicked Marker ID: $id")
+
+
+                        val clickedLatLng = it.position
+                        Log.d(TAG, "Clicked Marker LatLng: $clickedLatLng")
+
+                        val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng,18.0)
+                            .animate(CameraAnimation.Easing)
+                        naverMap.moveCamera(cameraUpdate)
+                    }
+                    true
+                }
+
+
             }
         })
 
