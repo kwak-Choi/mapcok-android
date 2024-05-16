@@ -1,18 +1,28 @@
 package com.mapcok.ui.map
 
+import android.Manifest
+import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.inputmethodservice.Keyboard.Row
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
@@ -37,6 +47,9 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 
 private const val TAG = "MapFragment_싸피"
 
@@ -45,6 +58,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private lateinit var mapView: MapFragment
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
+    lateinit var file: File
 
     private val builder = Clusterer.Builder<PhotoItem>()
 
@@ -52,6 +66,35 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         super.onViewCreated(view, savedInstanceState)
         initMapView()
 
+        binding.loadCamera.setOnClickListener {
+         capture()
+        }
+
+    }
+
+    private fun capture() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        file = createImageFile()
+        val photoUri = FileProvider.getUriForFile(requireContext(), "com.mapcok.fileprovider", file)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+        requestCamera.launch(intent)
+    }
+
+    private val requestCamera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // 이미지 캡쳐 성공
+            // file 변수를 사용하여 이미지 처리
+            // file 변수에는 이미지가 저장된 파일이 있습니다.
+        } else {
+            // 이미지 캡쳐 실패 또는 취소
+            Log.d(TAG, "Image capture failed or cancelled")
+        }
+    }
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 
     private fun initMapView() {
