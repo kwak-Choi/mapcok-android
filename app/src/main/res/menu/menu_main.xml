@@ -5,8 +5,8 @@
         android:title="@string/map" />
 
     <item
-        android:id="@+id/groupFragment"
-        android:title="@string/group" />
+        android:id="@+id/userListFragment"
+        android:title="@string/user_list" />
 
     <item
         android:id="@+id/myPageFragment"
