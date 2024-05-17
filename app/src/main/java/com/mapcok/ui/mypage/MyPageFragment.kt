@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPageBinding
 import com.mapcok.ui.base.BaseFragment
-import com.mapcok.ui.mypage.myphoto.MyPhotoFragment
+import com.mapcok.ui.myphoto.MyPhotoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -19,8 +20,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
     private lateinit var listAdapter: MyPageAdapter
     private lateinit var dao: MyPageDao
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+
+    override fun initView() {
+
 
         dao = MyPageDao(requireContext()).apply {
             this.dbOpenHelper(requireContext())
@@ -36,29 +39,28 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                 binding.mypagePhotoRecycler.apply {
                     adapter = listAdapter
                 }
+                clickPhoto()
             }.onFailure {
 
             }
-        }
-
-        listAdapter.setOnItemClickListener { myPagePhoto ->
-            val photoFragment = MyPhotoFragment.newInstance(myPagePhoto)
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_main, photoFragment)
-                .addToBackStack(null)
-                .commit()
         }
 
         binding.photoCnt.text = listAdapter.itemCount.toString()
 
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         dao.close()
     }
 
-    override fun initView() {
 
+
+    //사진 클릭
+    private fun clickPhoto(){
+        listAdapter.setOnItemClickListener {
+            this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
+        }
     }
 }
