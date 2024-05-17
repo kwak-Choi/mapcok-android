@@ -10,7 +10,11 @@ class UserDataSourceImpl @Inject constructor(
   private val userService: UserService
 ) : UserDataSource {
 
-  override suspend fun signUp(userParam: UserParam): ResponseData<Boolean> {
+  override suspend fun signUp(userParam: UserParam): ResponseData<UserData> {
     return userService.userSignUp(userParam)
+  }
+
+  override suspend fun getUserInfo(userEmail: String): ResponseData<UserData> {
+    return userService.getUserInfo(userEmail)
   }
 }

@@ -27,7 +27,7 @@ suspend fun <T> safeApiCall(
                     )
                     Timber.d("에러 바디 에러 $errorBody")
                     if (errorBody != null) {
-                        message = errorBody.data.message.ifEmpty { "" }
+//                        message = errorBody.data.message.ifEmpty { "" }
 
                     }
                     Timber.d("에러 바디 데이터 확인 $message")
