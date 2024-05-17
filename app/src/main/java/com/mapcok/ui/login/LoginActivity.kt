@@ -8,16 +8,15 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.mapcok.ui.main.MainActivity
 import com.mapcok.R
 import com.mapcok.data.model.param.UserParam
 import com.mapcok.databinding.ActivityLoginBinding
 import com.mapcok.ui.base.BaseActivity
 import com.mapcok.ui.login.viewmodel.LoginViewModel
+import com.mapcok.ui.main.MainActivity
 import com.mapcok.ui.util.initGoActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -27,7 +26,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
 
   private val loginViewModel: LoginViewModel by viewModels()
 
-  private lateinit var auth: FirebaseAuth
   private lateinit var oneTapClient: SignInClient
   private lateinit var signInRequest: BeginSignInRequest
   private lateinit var idToken: String
@@ -109,7 +107,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
   }
 
   private fun clickGoogleLoginBtn() {
-    binding.btn.setOnClickListener {
+    binding.imgGoogleLogin.setOnClickListener {
       oneTapClient
         .beginSignIn(signInRequest)
         .addOnSuccessListener(this) { result ->
