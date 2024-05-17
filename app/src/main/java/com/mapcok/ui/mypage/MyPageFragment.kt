@@ -11,8 +11,10 @@ import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPageBinding
 import com.mapcok.ui.base.BaseFragment
 import com.mapcok.ui.mypage.myphoto.MyPhotoFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
 
     private lateinit var listAdapter: MyPageAdapter

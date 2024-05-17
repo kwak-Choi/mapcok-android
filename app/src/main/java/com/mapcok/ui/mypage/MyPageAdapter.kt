@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mapcok.MainActivity
+import com.mapcok.ui.main.MainActivity
 import com.mapcok.databinding.MyPagePhotoItemBinding
 
 class MyPageAdapter(val context: Context,private val photo: MutableList<MyPagePhoto>):RecyclerView.Adapter<MyPageAdapter.ViewHolder>() {

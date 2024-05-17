@@ -37,9 +37,11 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MapFragment_싸피"
 
+@AndroidEntryPoint
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var mapView: MapFragment
