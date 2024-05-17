@@ -1,4 +1,4 @@
-package com.mapcok.ui.base
+package com.mapcok.ui.util
 
 import android.widget.ImageView
 import android.widget.TextView

@@ -6,21 +6,21 @@ import timber.log.Timber
 
 
 fun firebaseAuthCheck(
-  complete: () -> Unit,
-  cancel : () -> Unit
+  complete: (String) -> Unit,
+  cancel: () -> Unit
 ) {
   val auth = Firebase.auth.currentUser
 
-  if(auth != null){
+  if (auth != null) {
     auth.getIdToken(true).addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-          complete()
-        } else {
-          cancel()
-          Timber.d("파이어베이스 유저 조회 실패")
-        }
+      if (task.isSuccessful) {
+        complete(auth.email.toString())
+      } else {
+        cancel()
+        Timber.d("파이어베이스 유저 조회 실패")
       }
-  }else{
+    }
+  } else {
     cancel()
     Timber.d("파이어베이스 유저 조회 실패")
   }

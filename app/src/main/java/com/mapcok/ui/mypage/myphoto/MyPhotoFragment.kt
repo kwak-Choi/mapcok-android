@@ -11,8 +11,9 @@ import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPhotoBinding
 import com.mapcok.ui.base.BaseFragment
 import com.mapcok.ui.mypage.MyPagePhoto
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MyPhotoFragment : BaseFragment<FragmentMyPhotoBinding>(R.layout.fragment_my_photo) {
 
     private val photoViewModel :MyPhotoViewModel by activityViewModels()
