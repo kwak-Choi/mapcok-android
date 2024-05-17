@@ -9,7 +9,16 @@
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.mapcok.ui.map.MapFragment"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+
+        <action
+            android:id="@+id/action_mapFragment_to_upLoadFragment"
+            app:destination="@id/uploadFragment" />
+        <argument
+            android:name="imagePath"
+            app:argType="string"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/groupFragment"
@@ -19,6 +28,31 @@
     <fragment
         android:id="@+id/myPageFragment"
         android:name="com.mapcok.ui.mypage.MyPageFragment"
-        tools:layout="@layout/fragment_my_page" />
+        tools:layout="@layout/fragment_my_page" >
+
+        <action
+            android:id="@+id/action_myPageFragment_to_myPhotoFragment"
+            app:destination="@id/myPhotoFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.mapcok.ui.upload.UploadFragment"
+        tools:layout="@layout/fragment_upload">
+        <action
+            android:id="@+id/action_uploadFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <argument
+            android:name="imagePath"
+            app:argType="string"
+            />
+    </fragment>
+
+   <fragment
+       android:id="@+id/myPhotoFragment"
+       android:name="com.mapcok.ui.mypage.myphoto.MyPhotoFragment"
+       tools:layout="@layout/fragment_my_photo">
+   </fragment>
 
 </navigation>

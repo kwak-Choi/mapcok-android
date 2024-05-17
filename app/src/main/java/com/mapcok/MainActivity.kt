@@ -16,6 +16,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mapcok.databinding.ActivityMainBinding
@@ -94,17 +95,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    fun onClickListener(view: View) {
-        val tag= view.getTag() as MyPagePhoto
-        Log.d(TAG, "onClickListener: $tag, view : $view")
-        photoViewModel.setSelectedPhoto(tag)
 
-        val newFragment = MyPhotoFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_main,newFragment)
-            .addToBackStack(null)
-            .commit()
-    }
 
     //GPS 확인
     private fun checkLocationService(): Boolean {

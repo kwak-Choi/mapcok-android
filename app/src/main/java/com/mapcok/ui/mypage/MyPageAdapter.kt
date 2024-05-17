@@ -9,12 +9,11 @@ import com.mapcok.databinding.MyPagePhotoItemBinding
 
 class MyPageAdapter(val context: Context,private val photo: MutableList<MyPagePhoto>):RecyclerView.Adapter<MyPageAdapter.ViewHolder>() {
 
-    private lateinit var onItemClick: (MyPagePhoto) -> Unit
+    private  var onItemClick: ((MyPagePhoto) -> Unit)? = null
     inner class ViewHolder(private val binding:MyPagePhotoItemBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(photo: MyPagePhoto){
             binding.photoDto = photo
             binding.imageView.tag = photo
-            binding.activity = context as MainActivity
         }
     }
 
@@ -25,6 +24,11 @@ class MyPageAdapter(val context: Context,private val photo: MutableList<MyPagePh
 
     override fun onBindViewHolder(holder: MyPageAdapter.ViewHolder, position: Int) {
         holder.bind(photo[position])
+        holder.itemView.setOnClickListener {
+            onItemClick?.let {
+                it(photo[position])
+            }
+        }
     }
 
     override fun getItemCount(): Int {

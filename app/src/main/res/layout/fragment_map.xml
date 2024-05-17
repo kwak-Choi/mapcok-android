@@ -16,17 +16,58 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <View
+            android:id="@+id/dark_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:visibility="gone"></View>
+
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/load_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="19dp"
+            android:layout_marginBottom="140dp"
+            android:backgroundTint="@color/white"
             android:clickable="true"
-            android:backgroundTint="#C7C7FF"
-            app:srcCompat="@drawable/instagram"
+            android:visibility="invisible"
+            app:tint="@null"
+            app:fabCustomSize="45dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/camera_1" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/load_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="19dp"
+            android:layout_marginBottom="80dp"
+            android:backgroundTint="@color/white"
+            android:clickable="true"
+            app:fabCustomSize="45dp"
+            app:tint="@null"
+            android:visibility="invisible"
+            android:padding="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/frgaaa" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/load_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:clickable="true"
+            app:tint="@null"
+            android:backgroundTint="#D5E1FF"
+            app:fabCustomSize="55dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/insta" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

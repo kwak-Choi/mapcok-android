@@ -1,20 +1,27 @@
 package com.mapcok.ui.mypage
 
-import android.os.Build.VERSION_CODES.P
+import MyPhotoViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ListAdapter
+import com.google.android.play.integrity.internal.m
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPageBinding
 import com.mapcok.ui.base.BaseFragment
+import com.mapcok.ui.map.MapFragmentDirections
 import com.mapcok.ui.mypage.myphoto.MyPhotoFragment
 import kotlinx.coroutines.launch
 
+private const val TAG = "MyPageFragment_싸피"
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
-
+    private val photoViewModel: MyPhotoViewModel by activityViewModels()
     private lateinit var listAdapter: MyPageAdapter
     private lateinit var dao: MyPageDao
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,13 +47,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         }
 
         listAdapter.setOnItemClickListener { myPagePhoto ->
-            val photoFragment = MyPhotoFragment.newInstance(myPagePhoto)
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_main, photoFragment)
-                .addToBackStack(null)
-                .commit()
+            photoViewModel.setSelectedPhoto(myPagePhoto)
+            this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
         }
-
+        
         binding.photoCnt.text = listAdapter.itemCount.toString()
 
     }
