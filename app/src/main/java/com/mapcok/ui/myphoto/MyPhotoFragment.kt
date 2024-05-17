@@ -1,4 +1,4 @@
-package com.mapcok.ui.mypage.myphoto
+package com.mapcok.ui.myphoto
 
 import MyPhotoViewModel
 import android.os.Bundle
@@ -24,6 +24,7 @@ class MyPhotoFragment : BaseFragment<FragmentMyPhotoBinding>(R.layout.fragment_m
             binding.photoDto = photo
         }
     }
+
 
 
     companion object {

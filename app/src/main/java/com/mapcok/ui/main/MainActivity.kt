@@ -19,7 +19,7 @@ import com.mapcok.R
 import com.mapcok.databinding.ActivityMainBinding
 import com.mapcok.ui.base.BaseActivity
 import com.mapcok.ui.mypage.MyPagePhoto
-import com.mapcok.ui.mypage.myphoto.MyPhotoFragment
+import com.mapcok.ui.myphoto.MyPhotoFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
