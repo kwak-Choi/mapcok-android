@@ -22,7 +22,7 @@ object NetworkModule {
   @Provides
   fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     //if(BuildConfig.DEBUG){BuildConfig.DEBUG_API_KEY} else{BuildConfig.API_KEY}
-    val apiKey = "http://192.168.33.126:8000"
+    val apiKey = "http://192.168.33.126:8080/"
     return Retrofit.Builder()
       .addConverterFactory(ScalarsConverterFactory.create())
       .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
@@ -34,14 +34,13 @@ object NetworkModule {
 
   @Singleton
   @Provides
-  fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient =
+  fun provideOkHttpClient(): OkHttpClient =
     OkHttpClient.Builder()
       .run {
         connectTimeout(120, TimeUnit.SECONDS)
         readTimeout(120, TimeUnit.SECONDS)
         writeTimeout(120, TimeUnit.SECONDS)
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-        addInterceptor(interceptor)
         build()
       }
 

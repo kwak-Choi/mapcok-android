@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mapcok.data.datasource.remote.UserDataSource
 import com.mapcok.data.model.param.UserParam
-import com.mapcok.data.repository.UserRepository
+import com.mapcok.ui.util.SingletonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hustle.com.util.server.ResultWrapper
 import hustle.com.util.server.safeApiCall
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-  private val userRepository: UserRepository
+  private val userDataSource: UserDataSource
 ) : ViewModel() {
 
   private val _userSignUpSuccess = MutableLiveData<Boolean>()
@@ -31,10 +32,11 @@ class LoginViewModel @Inject constructor(
   fun signUp(userParam: UserParam) {
     viewModelScope.launch {
       when (val response = safeApiCall(Dispatchers.IO) {
-        userRepository.userSignUp(userParam)
+        userDataSource.signUp(userParam)
       }) {
         is ResultWrapper.Success -> {
-          setUserSignUpSuccess(response.data)
+          SingletonUtil.user = response.data.data
+          setUserSignUpSuccess(true)
           Timber.d("회원 가입 성공")
         }
 

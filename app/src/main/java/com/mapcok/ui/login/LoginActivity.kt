@@ -49,6 +49,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                 Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { idTokenTask ->
                   if (idTokenTask.isSuccessful) {
                     idTokenTask.result?.token?.let { token ->
+                      Timber.d("이메일 ${task.result.user?.email.toString()}")
+                      Timber.d("이름 ${task.result.user?.displayName.toString()}")
                       idToken = token
                       loginViewModel.signUp(
                         UserParam(

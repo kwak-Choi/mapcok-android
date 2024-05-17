@@ -6,5 +6,9 @@ import com.mapcok.data.model.param.UserParam
 
 interface UserDataSource {
 
-  suspend fun signUp(userParam: UserParam): ResponseData<Boolean>
+  //회원가입
+  suspend fun signUp(userParam: UserParam): ResponseData<UserData>
+
+  //유저정보
+  suspend fun getUserInfo(userEmail : String) : ResponseData<UserData>
 }
