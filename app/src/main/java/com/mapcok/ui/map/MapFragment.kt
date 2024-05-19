@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.inputmethodservice.Keyboard.Row
 import android.location.LocationManager
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +16,9 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 
+
+import androidx.core.content.FileProvider
+import androidx.navigation.fragment.findNavController
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
@@ -32,12 +37,20 @@ import com.naver.maps.map.clustering.ClusteringKey
 import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
 import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
 import com.naver.maps.map.clustering.LeafMarkerInfo
+
+import com.naver.maps.map.*
+import com.naver.maps.map.clustering.*
+
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
+
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val TAG = "MapFragment_싸피"
 
@@ -55,27 +68,105 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         initMapView()
 
     }
+        binding.loadMenu.setOnClickListener {
+            if (binding.loadCamera.visibility == View.VISIBLE) {
+                hideFab()
+            } else {
+                showFab()
+            }
+        }
+        binding.loadCamera.setOnClickListener {
+            capture()
+        }
+        binding.loadGallery.setOnClickListener {
+            getPicture()
+        }
+    }
+
+    private fun showFab() {
+        binding.loadCamera.visibility = View.VISIBLE
+        binding.loadGallery.visibility = View.VISIBLE
+        val showAnimation =
+            AnimationUtils.loadAnimation(requireActivity(), com.mapcok.R.anim.fab_show)
+        binding.loadCamera.startAnimation(showAnimation)
+        binding.loadGallery.startAnimation(showAnimation)
+    }
+
+    private fun hideFab() {
+        val hideAnimation =
+            AnimationUtils.loadAnimation(requireActivity(), com.mapcok.R.anim.fab_hide)
+        binding.loadCamera.startAnimation(hideAnimation)
+        binding.loadGallery.startAnimation(hideAnimation)
+        hideAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationEnd(animation: Animation) {
+                binding.loadCamera.visibility = View.INVISIBLE
+                binding.loadGallery.visibility = View.INVISIBLE
+            }
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+    }
+
+    private fun capture() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        file = createImageFile()
+        val photoUri = FileProvider.getUriForFile(requireContext(), "com.mapcok.fileprovider", file)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+        requestCamera.launch(intent)
+    }
+
+    lateinit var currentPhotoPath: String
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    private fun getPicture() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        galleryResult.launch(intent)
+    }
+
+    private val requestCamera =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val action = MapFragmentDirections.actionMapFragmentToUpLoadFragment(currentPhotoPath)
+                findNavController().navigate(action)
+            } else {
+                Log.d(TAG, "Image capture failed or cancelled")
+            }
+        }
+
+    private val galleryResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val imageUri = it.data?.data
+                imageUri?.let { uri ->
+                    val uriString = uri.toString()
+                    val action = MapFragmentDirections.actionMapFragmentToUpLoadFragment(uriString)
+                    findNavController().navigate(action)
+                }
+            }
+        }
 
     private fun initMapView() {
         mapView = childFragmentManager.findFragmentById(R.id.map_view) as MapFragment?
             ?: MapFragment.newInstance().also {
-                childFragmentManager.beginTransaction().replace(R.id.map_view, it).commit()
-            }
 
+                childFragmentManager.beginTransaction().replace(R.id.map_view, it).commit()
+
+                childFragmentManager.beginTransaction().replace(com.mapcok.R.id.map_view, it).commit()
+            }
         mapView.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (locationSource.onRequestPermissionsResult(
-                requestCode, permissions,
-                grantResults
-            )
-        ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             if (!locationSource.isActivated) { // 권한 거부됨
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
@@ -85,6 +176,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     override fun initView() {
+        
     }
 
     override fun onStart() {
@@ -130,12 +222,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         naverMap.uiSettings.isLocationButtonEnabled = true
         // 위치를 추적하면서 카메라도 따라 움직인다.
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
-
         naverMap.minZoom = 6.0
         naverMap.maxZoom = 18.0
-
         naverMap.extent = LatLngBounds(LatLng(33.0041, 124.6094), LatLng(38.6140, 131.5928))
-
         setMarkers()
 
 
@@ -200,9 +289,3 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-    }
-
-
-}
