@@ -1,4 +1,4 @@
-package com.mapcok.ui.mypage.myphoto
+package com.mapcok.ui.myphoto
 
 import MyPhotoViewModel
 import android.os.Bundle
@@ -12,7 +12,9 @@ import com.mapcok.databinding.FragmentMyPhotoBinding
 import com.mapcok.ui.base.BaseFragment
 import com.mapcok.ui.mypage.MyPageFragment
 import com.mapcok.ui.mypage.MyPagePhoto
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyPhotoFragment : BaseFragment<FragmentMyPhotoBinding>(R.layout.fragment_my_photo) {
 
     private val photoViewModel: MyPhotoViewModel by activityViewModels()
@@ -46,6 +48,7 @@ class MyPhotoFragment : BaseFragment<FragmentMyPhotoBinding>(R.layout.fragment_m
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_main)?.visibility =
             View.VISIBLE
     }
+
 
     companion object {
         private const val LOCATION = "location"

@@ -43,8 +43,8 @@ import java.util.Date
 
 private const val TAG = "MapFragment_싸피"
 
-class MapFragment : BaseFragment<FragmentMapBinding>(com.mapcok.R.layout.fragment_map),
-    OnMapReadyCallback {
+@AndroidEntryPoint
+class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
 
     private lateinit var mapView: MapFragment
     private lateinit var locationSource: FusedLocationSource

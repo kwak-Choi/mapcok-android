@@ -15,17 +15,24 @@ import com.google.android.play.integrity.internal.m
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPageBinding
 import com.mapcok.ui.base.BaseFragment
-import com.mapcok.ui.map.MapFragmentDirections
-import com.mapcok.ui.mypage.myphoto.MyPhotoFragment
+import kotlinx.coroutines.launch
+
+
+import com.mapcok.ui.myphoto.MyPhotoFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 private const val TAG = "MyPageFragment_싸피"
+
+@AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
     private val photoViewModel: MyPhotoViewModel by activityViewModels()
     private lateinit var listAdapter: MyPageAdapter
     private lateinit var dao: MyPageDao
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+
+    override fun initView() {
+
 
         dao = MyPageDao(requireContext()).apply {
             this.dbOpenHelper(requireContext())
@@ -41,6 +48,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
                 binding.mypagePhotoRecycler.apply {
                     adapter = listAdapter
                 }
+                clickPhoto()
             }.onFailure {
 
             }
@@ -50,17 +58,23 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             photoViewModel.setSelectedPhoto(myPagePhoto)
             this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
         }
-        
+
         binding.photoCnt.text = listAdapter.itemCount.toString()
 
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
         dao.close()
     }
 
-    override fun initView() {
 
+
+    //사진 클릭
+    private fun clickPhoto(){
+        listAdapter.setOnItemClickListener {
+            this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
+        }
     }
 }

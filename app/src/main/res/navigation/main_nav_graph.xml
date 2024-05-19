@@ -23,7 +23,9 @@
     <fragment
         android:id="@+id/groupFragment"
         android:name="com.mapcok.ui.group.GroupFragment"
-        tools:layout="@layout/fragment_group" />
+        tools:layout="@layout/fragment_group" >
+
+    </fragment>
 
     <fragment
         android:id="@+id/myPageFragment"
@@ -51,8 +53,13 @@
 
    <fragment
        android:id="@+id/myPhotoFragment"
-       android:name="com.mapcok.ui.mypage.myphoto.MyPhotoFragment"
+       android:name="com.mapcok.ui.myphoto.MyPhotoFragment"
        tools:layout="@layout/fragment_my_photo">
-   </fragment>
+        <action
+          android:id="@+id/action_myPageFragment_to_myPhotoFragment"
+          app:destination="@id/myPhotoFragment" />
+    </fragment>
+
+
 
 </navigation>

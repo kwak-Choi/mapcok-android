@@ -22,7 +22,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.mapcok.databinding.ActivityMainBinding
 import com.mapcok.ui.base.BaseActivity
 import com.mapcok.ui.mypage.MyPagePhoto
-import com.mapcok.ui.mypage.myphoto.MyPhotoFragment
 
 
 private const val TAG = "MainActivity_싸피"

@@ -3,26 +3,29 @@ package com.mapcok.ui.login
 import android.app.Activity
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.mapcok.MainActivity
 import com.mapcok.R
+import com.mapcok.data.model.param.UserParam
 import com.mapcok.databinding.ActivityLoginBinding
 import com.mapcok.ui.base.BaseActivity
-import com.mapcok.ui.util.firebaseAuthCheck
+import com.mapcok.ui.login.viewmodel.LoginViewModel
+import com.mapcok.ui.main.MainActivity
 import com.mapcok.ui.util.initGoActivity
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
-
+@AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login) {
 
-  private lateinit var auth: FirebaseAuth
+  private val loginViewModel: LoginViewModel by viewModels()
+
   private lateinit var oneTapClient: SignInClient
   private lateinit var signInRequest: BeginSignInRequest
   private lateinit var idToken: String
@@ -44,8 +47,15 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                 Firebase.auth.currentUser?.getIdToken(true)?.addOnCompleteListener { idTokenTask ->
                   if (idTokenTask.isSuccessful) {
                     idTokenTask.result?.token?.let { token ->
+                      Timber.d("이메일 ${task.result.user?.email.toString()}")
+                      Timber.d("이름 ${task.result.user?.displayName.toString()}")
                       idToken = token
-                      initGoActivity(this, MainActivity::class.java)
+                      loginViewModel.signUp(
+                        UserParam(
+                          userEmail = task.result.user?.email.toString(),
+                          userName = task.result.user?.displayName.toString()
+                        )
+                      )
                     } ?: Timber.e("FirebaseIdToken is null.")
                   }
                 }
@@ -62,19 +72,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
       }
     }
 
-  override fun onStart() {
-    super.onStart()
-    firebaseAuthCheck(
-      complete = {
-        initGoActivity(this, MainActivity::class.java)
-      },
-      cancel = {}
-    )
-  }
-
   override fun init() {
     initGoogleLogin()
     clickGoogleLoginBtn()
+    observeSignUpSuccess()
   }
 
 
@@ -97,9 +98,16 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
       .build()
   }
 
+  private fun observeSignUpSuccess() {
+    loginViewModel.userSignUpSuccess.observe(this) {
+      if (it) {
+        initGoActivity(this, MainActivity::class.java)
+      }
+    }
+  }
 
   private fun clickGoogleLoginBtn() {
-    binding.btn.setOnClickListener {
+    binding.imgGoogleLogin.setOnClickListener {
       oneTapClient
         .beginSignIn(signInRequest)
         .addOnSuccessListener(this) { result ->
