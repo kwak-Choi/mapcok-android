@@ -173,5 +173,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+
+  implementation ("de.hdodenhof:circleimageview:3.1.0")
+
+
 }

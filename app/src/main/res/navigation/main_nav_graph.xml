@@ -21,9 +21,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/groupFragment"
-        android:name="com.mapcok.ui.group.GroupFragment"
-        tools:layout="@layout/fragment_group" >
+        android:id="@+id/userListFragment"
+        android:name="com.mapcok.ui.userlist.UserListFragment"
+        tools:layout="@layout/fragment_user_list" >
 
     </fragment>
 
