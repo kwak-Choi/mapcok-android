@@ -1,23 +1,18 @@
 package com.mapcok.ui.mypage
 
-import android.os.Build.VERSION_CODES.P
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import MyPhotoViewModel
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ListAdapter
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPageBinding
 import com.mapcok.ui.base.BaseFragment
-import com.mapcok.ui.myphoto.MyPhotoFragment
-import dagger.hilt.android.AndroidEntryPoint
+
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
 
+class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
+    private val photoViewModel: MyPhotoViewModel by activityViewModels()
     private lateinit var listAdapter: MyPageAdapter
     private lateinit var dao: MyPageDao
 
@@ -45,6 +40,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
             }
         }
 
+        listAdapter.setOnItemClickListener { myPagePhoto ->
+            photoViewModel.setSelectedPhoto(myPagePhoto)
+            this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
+        }
+
         binding.photoCnt.text = listAdapter.itemCount.toString()
 
     }
@@ -56,9 +56,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
     }
 
 
-
     //사진 클릭
-    private fun clickPhoto(){
+    private fun clickPhoto() {
         listAdapter.setOnItemClickListener {
             this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
         }

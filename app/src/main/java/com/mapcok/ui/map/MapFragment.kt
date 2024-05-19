@@ -1,26 +1,15 @@
 package com.mapcok.ui.map
 
-import android.content.Context.LOCATION_SERVICE
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.inputmethodservice.Keyboard.Row
-import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.Nullable
-import androidx.core.content.ContextCompat
-
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
@@ -28,7 +17,6 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.clustering.ClusterMarkerInfo
 import com.naver.maps.map.clustering.Clusterer
-import com.naver.maps.map.clustering.ClusteringKey
 import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
 import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
 import com.naver.maps.map.clustering.LeafMarkerInfo
@@ -182,7 +170,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                         val clickedLatLng = it.position
                         Log.d(TAG, "Clicked Marker LatLng: $clickedLatLng")
 
-                        val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng,18.0)
+                        val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng, 18.0)
                             .animate(CameraAnimation.Easing)
                         naverMap.moveCamera(cameraUpdate)
                     }
