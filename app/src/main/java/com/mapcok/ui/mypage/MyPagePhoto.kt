@@ -1,10 +1,8 @@
 package com.mapcok.ui.mypage
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-data class MyPagePhoto(var location : String, var date : Long, var src: String) :Parcelable {
+
+data class MyPagePhoto(var location : String, var date : Long, var src: String) {
     var num = -1
 
     constructor(_num:Int, location: String, date: Long, src: String): this(location,date,src){
