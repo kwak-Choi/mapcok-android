@@ -13,11 +13,11 @@ import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
 import androidx.core.content.FileProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
+import com.mapcok.ui.map.MapFragmentDirections
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
@@ -36,6 +36,7 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date

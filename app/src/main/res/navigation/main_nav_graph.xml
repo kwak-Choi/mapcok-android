@@ -55,10 +55,10 @@
        android:id="@+id/myPhotoFragment"
        android:name="com.mapcok.ui.myphoto.MyPhotoFragment"
        tools:layout="@layout/fragment_my_photo">
-        <action
-          android:id="@+id/action_myPageFragment_to_myPhotoFragment"
-          app:destination="@id/myPhotoFragment" />
-    </fragment>
+       <action
+           android:id="@+id/action_myPhotoFragment_to_myPageFragment"
+           app:destination="@id/myPageFragment" />
+   </fragment>
 
 
 
