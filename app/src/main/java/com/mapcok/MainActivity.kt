@@ -24,8 +24,7 @@ import com.mapcok.ui.base.BaseActivity
 import com.mapcok.ui.mypage.MyPagePhoto
 
 
-private const val TAG = "MainActivity_싸피피"
-
+private const val TAG = "MainActivity_싸피"
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private lateinit var navHostFragment: NavHostFragment

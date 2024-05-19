@@ -7,25 +7,29 @@ import android.graphics.Color
 import android.inputmethodservice.Keyboard.Row
 import android.location.LocationManager
 import android.app.Activity
+import android.app.Activity.RESULT_OK
+
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
-
 
 import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
+import com.mapcok.ui.map.MapFragmentDirections
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
@@ -33,23 +37,20 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.clustering.ClusterMarkerInfo
 import com.naver.maps.map.clustering.Clusterer
-import com.naver.maps.map.clustering.ClusteringKey
 import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
 import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
 import com.naver.maps.map.clustering.LeafMarkerInfo
-
 import com.naver.maps.map.*
 import com.naver.maps.map.clustering.*
-
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
-
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.*
 
 private const val TAG = "MapFragment_싸피"
@@ -60,14 +61,14 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private lateinit var mapView: MapFragment
     private lateinit var locationSource: FusedLocationSource
     private lateinit var naverMap: NaverMap
+    lateinit var file: File
 
     private val builder = Clusterer.Builder<PhotoItem>()
+
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMapView()
-
-    }
         binding.loadMenu.setOnClickListener {
             if (binding.loadCamera.visibility == View.VISIBLE) {
                 hideFab()
@@ -81,6 +82,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.loadGallery.setOnClickListener {
             getPicture()
         }
+
     }
 
     private fun showFab() {
@@ -103,6 +105,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 binding.loadCamera.visibility = View.INVISIBLE
                 binding.loadGallery.visibility = View.INVISIBLE
             }
+
             override fun onAnimationRepeat(animation: Animation?) {}
         })
     }
@@ -119,7 +122,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private fun createImageFile(): File {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        val storageDir: File =
+            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
         return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir).apply {
             currentPhotoPath = absolutePath
         }
@@ -134,7 +138,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private val requestCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val action = MapFragmentDirections.actionMapFragmentToUpLoadFragment(currentPhotoPath)
+                val action =
+                    MapFragmentDirections.actionMapFragmentToUpLoadFragment(currentPhotoPath)
                 findNavController().navigate(action)
             } else {
                 Log.d(TAG, "Image capture failed or cancelled")
@@ -154,18 +159,21 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
 
     private fun initMapView() {
-        mapView = childFragmentManager.findFragmentById(R.id.map_view) as MapFragment?
+        mapView = childFragmentManager.findFragmentById(com.mapcok.R.id.map_view) as MapFragment?
             ?: MapFragment.newInstance().also {
-
-                childFragmentManager.beginTransaction().replace(R.id.map_view, it).commit()
-
-                childFragmentManager.beginTransaction().replace(com.mapcok.R.id.map_view, it).commit()
+                childFragmentManager.beginTransaction().replace(com.mapcok.R.id.map_view, it)
+                    .commit()
             }
+
         mapView.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             if (!locationSource.isActivated) { // 권한 거부됨
                 naverMap.locationTrackingMode = LocationTrackingMode.None
@@ -176,7 +184,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     override fun initView() {
-        
+
     }
 
     override fun onStart() {
@@ -257,7 +265,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }).leafMarkerUpdater(object : DefaultLeafMarkerUpdater() {
             override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
                 super.updateLeafMarker(info, marker)
-                marker.icon = OverlayImage.fromResource(R.drawable.photomarker)
+                marker.icon = OverlayImage.fromResource(com.mapcok.R.drawable.photomarker)
                 marker.width = 220
                 marker.height = 220
                 marker.onClickListener = Overlay.OnClickListener {
@@ -271,7 +279,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                         val clickedLatLng = it.position
                         Log.d(TAG, "Clicked Marker LatLng: $clickedLatLng")
 
-                        val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng,18.0)
+                        val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng, 18.0)
                             .animate(CameraAnimation.Easing)
                         naverMap.moveCamera(cameraUpdate)
                     }
@@ -287,5 +295,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         clusterer.map = naverMap
 
     }
+}
 
 
