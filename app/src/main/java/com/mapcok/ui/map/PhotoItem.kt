@@ -11,17 +11,8 @@ class PhotoItem(val id:Int,private var position: LatLng) : ClusteringKey {//TedC
         return TedLatLng(position.latitude, position.longitude)
     }
 
-
-
-    /**
-     * Set the title of the marker
-     * @param title string to be set as title
-     */
     var title: String? = null
-    /**
-     * Set the description of the marker
-     * @param snippet string to be set as snippet
-     */
+
     var snippet: String? = null
 
     constructor(lat: Double, lng: Double) : this(1,LatLng(lat, lng)) {
