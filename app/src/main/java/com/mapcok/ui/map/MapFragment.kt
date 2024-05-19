@@ -1,8 +1,11 @@
 package com.mapcok.ui.map
 
+import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -12,8 +15,12 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
@@ -49,7 +56,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     private lateinit var mapView: MapFragment
     private lateinit var locationSource: FusedLocationSource
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var naverMap: NaverMap
+    private lateinit var currentLatLng: LatLng
     lateinit var file: File
 
     private val builder = Clusterer.Builder<PhotoItem>()
@@ -58,6 +67,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMapView()
+        checkLocationPermissionAndFetchLocation()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         binding.loadMenu.setOnClickListener {
             if (binding.loadCamera.visibility == View.VISIBLE) {
                 hideFab()
@@ -72,6 +83,40 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             getPicture()
         }
 
+    }
+    private fun checkLocationPermissionAndFetchLocation() {
+        // 위치 권한 체크
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // 권한이 없으면 권한 요청
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+            // 위치 정보 가져오기
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    currentLatLng = LatLng(location.latitude, location.longitude)
+                    Log.d(TAG, "Current LatLng: $currentLatLng")
+                } else {
+                    Log.e(TAG, "Failed to get current location")
+                }
+            }
+        }
     }
 
     private fun showFab() {
@@ -107,8 +152,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         file = createImageFile()
         val photoUri = FileProvider.getUriForFile(requireContext(), "com.mapcok.fileprovider", file)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+        intent.putExtra("current_latlng", currentLatLng) // 현재 위치 정보를 번들에 추가
+        Log.d(TAG, "capture: $currentLatLng")
         requestCamera.launch(intent)
     }
+
+
+
     lateinit var currentPhotoPath: String
 
     private fun createImageFile(): File {
@@ -230,6 +280,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         naverMap.extent = LatLngBounds(LatLng(33.0041, 124.6094), LatLng(38.6140, 131.5928))
 
         setMarkers()
+
 
 
     }
