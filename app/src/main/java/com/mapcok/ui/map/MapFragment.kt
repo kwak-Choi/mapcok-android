@@ -1,14 +1,7 @@
 package com.mapcok.ui.map
 
-import android.content.Context.LOCATION_SERVICE
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.inputmethodservice.Keyboard.Row
-import android.location.LocationManager
 import android.app.Activity
 import android.app.Activity.RESULT_OK
-
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
@@ -19,8 +12,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
-import androidx.core.content.ContextCompat
-
 import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import com.mapcok.R
@@ -40,8 +31,6 @@ import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
 import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
 import com.naver.maps.map.clustering.LeafMarkerInfo
-import com.naver.maps.map.*
-import com.naver.maps.map.clustering.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
@@ -51,7 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.*
+
 
 private const val TAG = "MapFragment_싸피"
 
@@ -100,13 +89,16 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         binding.loadCamera.startAnimation(hideAnimation)
         binding.loadGallery.startAnimation(hideAnimation)
         hideAnimation.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation?) {}
+            override fun onAnimationStart(animation: Animation?) {
+            }
+
             override fun onAnimationEnd(animation: Animation) {
                 binding.loadCamera.visibility = View.INVISIBLE
                 binding.loadGallery.visibility = View.INVISIBLE
             }
 
-            override fun onAnimationRepeat(animation: Animation?) {}
+            override fun onAnimationRepeat(animation: Animation?) {
+            }
         })
     }
 
@@ -117,7 +109,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
         requestCamera.launch(intent)
     }
-
     lateinit var currentPhotoPath: String
 
     private fun createImageFile(): File {
@@ -132,23 +123,22 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private fun getPicture() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+
         galleryResult.launch(intent)
     }
 
     private val requestCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val action =
-                    MapFragmentDirections.actionMapFragmentToUpLoadFragment(currentPhotoPath)
+                val action = MapFragmentDirections.actionMapFragmentToUpLoadFragment(currentPhotoPath)
                 findNavController().navigate(action)
             } else {
                 Log.d(TAG, "Image capture failed or cancelled")
             }
         }
-
     private val galleryResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
+            if (it.resultCode == RESULT_OK) {
                 val imageUri = it.data?.data
                 imageUri?.let { uri ->
                     val uriString = uri.toString()
@@ -174,7 +164,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+        if (locationSource.onRequestPermissionsResult(
+                requestCode, permissions,
+                grantResults
+            )
+        ) {
             if (!locationSource.isActivated) { // 권한 거부됨
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
@@ -184,7 +178,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     override fun initView() {
-
     }
 
     override fun onStart() {
@@ -230,9 +223,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         naverMap.uiSettings.isLocationButtonEnabled = true
         // 위치를 추적하면서 카메라도 따라 움직인다.
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+
         naverMap.minZoom = 6.0
         naverMap.maxZoom = 18.0
+
         naverMap.extent = LatLngBounds(LatLng(33.0041, 124.6094), LatLng(38.6140, 131.5928))
+
         setMarkers()
 
 
@@ -295,6 +291,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         clusterer.map = naverMap
 
     }
+
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
+
+
 }
-
-
