@@ -3,7 +3,9 @@
   xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <data>
-
+    <variable
+        name="userData"
+        type="com.mapcok.data.model.UserData" />
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +30,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="30dp"
       android:fontFamily="@font/pretendard_semibold"
-      android:text="호호호"
+      android:text="@{userData.userName}"
       android:textSize="20sp"
       app:layout_constraintEnd_toEndOf="@+id/img_profile"
       app:layout_constraintStart_toStartOf="@+id/img_profile"
