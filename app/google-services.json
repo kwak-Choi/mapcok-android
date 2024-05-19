@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "975755915582-po06isllmej5p9nv5lf34nerpge5hh6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mapcok",
+            "certificate_hash": "8719b1aa7454dc1cbe17eead7e151e03f48e7ef6"
+          }
+        },
+        {
           "client_id": "975755915582-t9iuei0da4bapmq1hqm66e7no0us2q5i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
