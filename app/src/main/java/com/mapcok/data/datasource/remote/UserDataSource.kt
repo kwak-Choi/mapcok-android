@@ -11,4 +11,7 @@ interface UserDataSource {
 
   //유저정보
   suspend fun getUserInfo(userEmail : String) : ResponseData<UserData>
+
+  //유저 전체 정보
+  suspend fun getUsers() : ResponseData<List<UserData>>
 }

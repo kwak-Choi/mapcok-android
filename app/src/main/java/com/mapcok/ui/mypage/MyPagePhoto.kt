@@ -1,5 +1,7 @@
 package com.mapcok.ui.mypage
 
+
+
 data class MyPagePhoto(var location : String, var date : Long, var src: String) {
     var num = -1
 

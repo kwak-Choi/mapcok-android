@@ -1,5 +1,6 @@
 package com.mapcok.ui.mypage
 
+
 import MyPhotoViewModel
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -7,10 +8,12 @@ import androidx.navigation.fragment.findNavController
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPageBinding
 import com.mapcok.ui.base.BaseFragment
-
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+private const val TAG = "MyPageFragment_싸피"
 
+@AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
     private val photoViewModel: MyPhotoViewModel by activityViewModels()
     private lateinit var listAdapter: MyPageAdapter

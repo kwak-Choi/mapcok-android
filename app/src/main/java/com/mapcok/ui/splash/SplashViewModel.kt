@@ -33,15 +33,23 @@ class SplashViewModel @Inject constructor(
         userDataSource.getUserInfo(userEmail)
       }){
         is ResultWrapper.Success ->{
-          SingletonUtil.user = response.data.data
-          setLoginSuccess(true)
+          Timber.d("확인 ${response.data.data}")
+          val value = response.data.data
+          if(value != null){
+            SingletonUtil.user = response.data.data
+            setLoginSuccess(true)
+          }else{
+            setLoginSuccess(false)
+          }
           Timber.d("로그인 성공")
         }
         is ResultWrapper.GenericError -> {
+          setLoginSuccess(false)
           Timber.d("로그인 에러 ${response.message}")
         }
 
         is ResultWrapper.NetworkError -> {
+          setLoginSuccess(false)
           Timber.d("로그인 네트워크 에러")
         }
       }
