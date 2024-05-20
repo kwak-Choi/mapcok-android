@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -15,19 +14,16 @@ import androidx.annotation.Nullable
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.Nullable
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
-import com.mapcok.ui.map.MapFragmentDirections
 import com.mapcok.ui.photo.viewmodel.UploadPhotoViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds

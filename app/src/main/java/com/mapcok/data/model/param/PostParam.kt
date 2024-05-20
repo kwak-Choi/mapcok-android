@@ -1,11 +1,11 @@
 package com.mapcok.data.model.param
 
-import okhttp3.MultipartBody
+import android.net.Uri
 
-data class PostParam (
-    val userId: Int,
-    val imageFile: MultipartBody.Part,
-    val content : String,
-    val latitude : Double,
-    val longitude : Double
+data class PostParam(
+  val userId: Int,
+  val imageFile: Uri,
+  val content: String,
+  val latitude: Double,
+  val longitude: Double
 )

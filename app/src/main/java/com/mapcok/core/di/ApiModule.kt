@@ -21,7 +21,7 @@ object ApiModule {
 
   @Singleton
   @Provides
-  fun provideUserPhotoService(
+  fun providePostService(
     retrofit: Retrofit
   ): PostService = retrofit.create(PostService::class.java)
 }

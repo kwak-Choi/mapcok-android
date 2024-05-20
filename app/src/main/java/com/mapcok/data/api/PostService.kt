@@ -2,6 +2,7 @@ package com.mapcok.data.api
 
 import com.mapcok.data.model.ResponseData
 import com.mapcok.data.model.PostData
+import com.mapcok.data.model.SuccessData
 import okhttp3.MultipartBody
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -27,15 +28,16 @@ interface PostService {
     ): ResponseData<List<PostData>>
 
 
-
+    //게시물 업로드
     @Multipart
     @POST("post/{userId}")
-    suspend fun addPhoto(
+    suspend fun registerPost(
         @Path("userId") userId: Int,
-        @Part imageFile: MultipartBody.Part,
-        @Part latitude: Double,
-        @Part longitude: Double
-    ): ResponseData<PostData>
+        @Part image : MultipartBody.Part,
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
+        @Query ("content") content : String
+    ): ResponseData<SuccessData>
 
     @DELETE("user/photo")
     suspend fun deletePhoto(

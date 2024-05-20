@@ -30,28 +30,23 @@ class UploadPhotoViewModel @Inject constructor(
     }
 
 
-    private val _photoAddedSuccess = MutableLiveData<Boolean>()
-    val photoAddedSuccess: LiveData<Boolean> get() = _photoAddedSuccess
+    private val _registerPostSuccess = MutableLiveData<Boolean>()
+    val registerPostSuccess: LiveData<Boolean> get() = _registerPostSuccess
 
-    fun setPhotoAddedSuccess(value: Boolean) {
-        _photoAddedSuccess.value = value
+    fun setRegisterPostSuccess(value: Boolean) {
+        _registerPostSuccess.value = value
     }
 
-    private val _photoDeletedSuccess = MutableLiveData<Boolean>()
-    val photoDeletedSuccess: LiveData<Boolean> get() = _photoDeletedSuccess
 
-    fun setPhotoDeletedSuccess(value: Boolean) {
-        _photoDeletedSuccess.value = value
-    }
 
     fun registerPost(postParam: PostParam) {
         viewModelScope.launch {
+            Timber.d("확인 파람 $postParam")
             when (val response = safeApiCall(Dispatchers.IO) {
                 postDataSource.registerPost(postParam)
             }) {
                 is ResultWrapper.Success -> {
-                    SingletonUtil.photo = response.data.data
-                    setPhotoAddedSuccess(true)
+                    setRegisterPostSuccess(response.data.data.success)
                     Timber.d("사진 추가 성공")
                 }
 
@@ -66,24 +61,4 @@ class UploadPhotoViewModel @Inject constructor(
         }
     }
 
-    fun deletePhoto(userId: Int, photoId: Int) {
-        viewModelScope.launch {
-            when (val response = safeApiCall(Dispatchers.IO) {
-                postDataSource.deletePhoto(userId, photoId)
-            }) {
-                is ResultWrapper.Success -> {
-                    setPhotoDeletedSuccess(true)
-                    Timber.d("사진 삭제 성공")
-                }
-
-                is ResultWrapper.GenericError -> {
-                    Timber.d("사진 삭제 에러 ${response.message}")
-                }
-
-                is ResultWrapper.NetworkError -> {
-                    Timber.d("사진 삭제 네트워크 에러")
-                }
-            }
-        }
-    }
 }

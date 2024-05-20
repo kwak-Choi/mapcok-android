@@ -1,22 +1,31 @@
 package com.mapcok.data.datasource.remote
 
+import android.content.Context
 import com.mapcok.data.api.PostService
 import com.mapcok.data.model.ResponseData
 import com.mapcok.data.model.UserData
 import com.mapcok.data.model.PostData
+import com.mapcok.data.model.SuccessData
 import com.mapcok.data.model.param.PostParam
+import com.mapcok.data.util.toMultipartBodyBasic
+import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class PostDataSourceImpl @Inject constructor(
-    private val postService: PostService
+    private val postService: PostService,
+    @ApplicationContext private val context: Context
 ) : PostDataSource {
 
-    override suspend fun registerPost(postParam: PostParam): ResponseData<PostData> {
-        return postService.addPhoto(
+    override suspend fun registerPost(postParam: PostParam): ResponseData<SuccessData> {
+        val imageValue = postParam.imageFile.toMultipartBodyBasic(context, "image")
+        Timber.d("데이터 확인  ${postParam.userId} $imageValue ${postParam.latitude} ${postParam.longitude} ${postParam.content} ")
+        return postService.registerPost(
             userId = postParam.userId,
-            imageFile = postParam.imageFile,
+            image = imageValue,
             latitude = postParam.latitude,
-            longitude = postParam.longitude
+            longitude = postParam.longitude,
+            content = postParam.content,
         )
     }
 
