@@ -35,9 +35,10 @@ class LoginViewModel @Inject constructor(
         userDataSource.signUp(userParam)
       }) {
         is ResultWrapper.Success -> {
+          Timber.d("회원 가입 파람 $userParam")
           SingletonUtil.user = response.data.data
           setUserSignUpSuccess(true)
-          Timber.d("회원 가입 성공")
+          Timber.d("회원 가입 성공 ${response.data.data}")
         }
 
         is ResultWrapper.GenericError -> {
