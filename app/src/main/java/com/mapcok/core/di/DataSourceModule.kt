@@ -2,8 +2,8 @@ package com.mapcok.core.di
 
 import com.mapcok.data.datasource.remote.UserDataSource
 import com.mapcok.data.datasource.remote.UserDataSourceImpl
-import com.mapcok.data.datasource.remote.UserPhotoDataSource
-import com.mapcok.data.datasource.remote.UserPhotoDataSourceImpl
+import com.mapcok.data.datasource.remote.PostDataSource
+import com.mapcok.data.datasource.remote.PostDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,6 +23,6 @@ interface DataSourceModule {
     @Singleton
     @Binds
     fun provideUserPhotoDataSource(
-        userPhotoDataSourceImpl: UserPhotoDataSourceImpl
-    ): UserPhotoDataSource
+        userPhotoDataSourceImpl: PostDataSourceImpl
+    ): PostDataSource
 }

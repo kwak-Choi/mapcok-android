@@ -1,8 +1,7 @@
 package com.mapcok.core.di
 
 import com.mapcok.data.api.UserService
-import com.mapcok.data.api.UserPhotoService
-import dagger.Binds
+import com.mapcok.data.api.PostService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,5 +23,5 @@ object ApiModule {
   @Provides
   fun provideUserPhotoService(
     retrofit: Retrofit
-  ): UserPhotoService = retrofit.create(UserPhotoService::class.java)
+  ): PostService = retrofit.create(PostService::class.java)
 }

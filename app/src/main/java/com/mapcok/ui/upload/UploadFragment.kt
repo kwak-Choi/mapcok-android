@@ -6,19 +6,16 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mapcok.R
-import com.mapcok.data.model.param.UserPhotoParam
+import com.mapcok.data.model.param.PostParam
 import com.mapcok.databinding.FragmentUploadBinding
 import com.mapcok.ui.base.BaseFragment
 import com.mapcok.ui.photo.viewmodel.UploadPhotoViewModel
 import com.mapcok.ui.util.SingletonUtil
-import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -42,25 +39,35 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
 
         val imageUriString = args.imagePath
         val imageUri = Uri.parse(imageUriString)
-        binding.setmyimage.setImageURI(imageUri)
+        Log.d(TAG, "initView: $imageUri, $imageUriString")
+        binding.imgPost.setImageURI(imageUri)
 
         Log.d(TAG, "initView: 진짜로? ${uploadPhotoViewModel.location.value}")
 
         binding.saveBtn.setOnClickListener {
 
-            Log.d(TAG, "initView: ㅠㅗ토ㅠㅏ람스 입문1차")
-            Log.d(TAG, "initView: ${SingletonUtil.user}")
-            val userId = SingletonUtil.user?.id ?: return@setOnClickListener
-            Log.d(TAG, "initView: ㅠㅗ토ㅠㅏ람스 입문1차..")
+
+            val userId = SingletonUtil.user?.id
+            val userData = SingletonUtil.user
+
+            Log.d(TAG, "initView: ${userId} , ${userData}")
+            if (userId == null || userData == null) {
+                return@setOnClickListener
+            }
+
             uploadPhotoViewModel.location.value?.let { location ->
                 val (latitude, longitude) = location
-                val photoParam = createUserPhotoParam(userId, imageUri, latitude, longitude)
-                Log.d(TAG, "initView: 입문 2차")
+                Log.d(TAG, "initView: $latitude, $longitude")
+                val photoParam = createUserPhotoParam(userId, imageUri,latitude, longitude)
+
+                Log.d(TAG, "initView: Photo Params initiation 2 - ${photoParam?.userId},${photoParam?.imageFile},${photoParam?.latitude},${photoParam?.longitude}")
+
                 if (photoParam != null) {
-                    uploadPhotoViewModel.addPhoto(photoParam)
+                    uploadPhotoViewModel.registerPost(photoParam)
                 }
             }
         }
+
 
         uploadPhotoViewModel.photoAddedSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
@@ -73,15 +80,31 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
         }
     }
 
-    private fun createUserPhotoParam(userId: Int, imageUri: Uri, latitude: Double, longitude: Double): UserPhotoParam? {
+    private fun createUserPhotoParam(userId: Int, imageUri: Uri,latitude: Double, longitude: Double): PostParam? {
         val context = requireContext()
-        val file = getFileFromUri(context, imageUri) ?: return null
+        val file = getFileFromUri(context, imageUri)
+        if (file == null || !file.exists()) {
+            Log.e(TAG, "createUserPhotoParam: File does not exist or cannot be retrieved")
+            return null
+        }
+        val content = binding.etContent.text.toString()
 
-        val requestFile = RequestBody.create((context.contentResolver.getType(imageUri) ?: "image/*").toMediaTypeOrNull(), file)
+        val contentType = context.contentResolver.getType(imageUri)
+        if (contentType == null) {
+            Log.e(TAG, "createUserPhotoParam: Content type is null")
+            return null
+        }
+
+        Log.d(TAG, "createUserPhotoParam: File exists - ${file.absolutePath}")
+
+        val requestFile = RequestBody.create(contentType.toMediaTypeOrNull(), file)
         val body = MultipartBody.Part.createFormData("imageFile", file.name, requestFile)
 
-        return UserPhotoParam(userId, body, latitude, longitude)
+        Log.d(TAG, "createUserPhotoParam: RequestBody created - $body")
+
+        return PostParam(userId, body, content, latitude, longitude)
     }
+
 
     private fun getFileFromUri(context: Context, uri: Uri): File? {
         val filePathColumn = arrayOf(android.provider.MediaStore.Images.Media.DATA)

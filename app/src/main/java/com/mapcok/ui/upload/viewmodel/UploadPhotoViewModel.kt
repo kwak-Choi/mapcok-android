@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mapcok.data.datasource.remote.UserPhotoDataSource
-import com.mapcok.data.model.param.UserPhotoParam
+import com.mapcok.data.datasource.remote.PostDataSource
+import com.mapcok.data.model.UserData
+import com.mapcok.data.model.param.PostParam
 import com.mapcok.ui.util.SingletonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hustle.com.util.server.ResultWrapper
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UploadPhotoViewModel @Inject constructor(
-    private val userPhotoDataSource: UserPhotoDataSource
+    private val postDataSource: PostDataSource
 ) : ViewModel() {
 
 
@@ -43,10 +44,10 @@ class UploadPhotoViewModel @Inject constructor(
         _photoDeletedSuccess.value = value
     }
 
-    fun addPhoto(userPhotoParam: UserPhotoParam) {
+    fun registerPost(postParam: PostParam) {
         viewModelScope.launch {
             when (val response = safeApiCall(Dispatchers.IO) {
-                userPhotoDataSource.addPhoto(userPhotoParam)
+                postDataSource.registerPost(postParam)
             }) {
                 is ResultWrapper.Success -> {
                     SingletonUtil.photo = response.data.data
@@ -68,7 +69,7 @@ class UploadPhotoViewModel @Inject constructor(
     fun deletePhoto(userId: Int, photoId: Int) {
         viewModelScope.launch {
             when (val response = safeApiCall(Dispatchers.IO) {
-                userPhotoDataSource.deletePhoto(userId, photoId)
+                postDataSource.deletePhoto(userId, photoId)
             }) {
                 is ResultWrapper.Success -> {
                     setPhotoDeletedSuccess(true)

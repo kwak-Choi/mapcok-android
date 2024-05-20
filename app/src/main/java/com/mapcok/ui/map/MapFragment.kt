@@ -72,9 +72,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMapView()
-//        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            fetchLocation()
-//        }
+        checkLocationPermissionAndFetchLocation()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         binding.loadMenu.setOnClickListener {
             if (binding.loadCamera.visibility == View.VISIBLE) {
@@ -91,32 +89,42 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
 
     }
-//    private fun fetchLocation() {
-//        if (ActivityCompat.checkSelfPermission(
-//                requireContext(),
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-//                requireContext(),
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-//                if (location != null) {
-//                    lat = location.latitude
-//                    lon = location.longitude
-//                    uploadPhotoViewModel.setLocation(lat, lon)
-//                    Log.d(TAG, "Location fetched: $lat,$lon")
-//                } else {
-//                    Log.e(TAG, "Failed to get current location")
-//                }
-//            }
-//        }
-//
-//    }
-//
-//    fun onPermissionGranted() {
-//        fetchLocation()
-//    }
+    private fun checkLocationPermissionAndFetchLocation() {
+        // 위치 권한 체크
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // 권한이 없으면 권한 요청
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+            // 위치 정보 가져오기
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    lat = location.latitude
+                    lon = location.longitude
+                    uploadPhotoViewModel.setLocation(lat, lon)
+                    Log.d(TAG, "checkLocationPermissionAndFetchLocation: $lat,$lon")
+                } else {
+                    Log.e(TAG, "Failed to get current location")
+                }
+            }
+        }
+    }
 
     private fun showFab() {
         binding.loadCamera.visibility = View.VISIBLE
