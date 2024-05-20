@@ -1,6 +1,7 @@
 package com.mapcok.ui.map
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -13,18 +14,22 @@ import android.view.View
 import androidx.annotation.Nullable
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mapcok.R
+import com.mapcok.data.model.PostData
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
 import com.mapcok.ui.photo.viewmodel.UploadPhotoViewModel
+import com.mapcok.ui.util.SingletonUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
@@ -49,7 +54,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.properties.Delegates
 
-
 private const val TAG = "MapFragment_싸피"
 
 @AndroidEntryPoint
@@ -64,7 +68,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     lateinit var file: File
 
     private val builder = Clusterer.Builder<PhotoItem>()
-
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -85,7 +88,18 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             getPicture()
         }
 
+
+        Log.d(TAG, "onViewCreated: ${SingletonUtil.user?.id}")
+        uploadPhotoViewModel.selectedPost.observe(viewLifecycleOwner, Observer { postData ->
+            Log.d(TAG, "onViewCreated: ${postData}")
+            if (postData != null) {
+                Log.d(TAG, "onViewCreated: 날 보여주고싶어")
+                Toast.makeText(context, postData.content, Toast.LENGTH_LONG).show()
+            }
+        })
+
     }
+
     private fun checkLocationPermissionAndFetchLocation() {
         // 위치 권한 체크
         if (ContextCompat.checkSelfPermission(
@@ -159,8 +173,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         requestCamera.launch(intent)
     }
 
-
-
     lateinit var currentPhotoPath: String
 
     private fun createImageFile(): File {
@@ -188,6 +200,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 Log.d(TAG, "Image capture failed or cancelled")
             }
         }
+
     private val galleryResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
@@ -281,26 +294,25 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         naverMap.extent = LatLngBounds(LatLng(33.0041, 124.6094), LatLng(38.6140, 131.5928))
 
-        setMarkers()
-
-
-
+        uploadPhotoViewModel.postList.observe(viewLifecycleOwner, Observer { postList ->
+            setMarkers(postList)
+        })
+        SingletonUtil.user?.let { uploadPhotoViewModel.getUserPosts(it.id) }
     }
 
-    private fun setMarkers() {
-
-        val keyTagMap = mapOf(
-            PhotoItem(1, LatLng(37.372, 127.113)) to null,
-            PhotoItem(2, LatLng(37.366, 127.106)) to null,
-            PhotoItem(3, LatLng(37.365, 127.157)) to null,
-            PhotoItem(4, LatLng(37.361, 127.105)) to null,
-            PhotoItem(5, LatLng(37.368, 127.110)) to null,
-            PhotoItem(6, LatLng(37.360, 127.106)) to null,
-            PhotoItem(7, LatLng(37.363, 127.111)) to null
-        )
+    @SuppressLint("LogNotTimber")
+    private fun setMarkers(postList: List<PostData>) {
+        Log.d(TAG, "setMarkers: 호출댐??")
+        postList.forEachIndexed { index, post ->
+            Log.d(TAG, "Post $index: $post")
+        }
+        
+        val keyTagMap = postList.associate { post ->
+            PhotoItem(post.photoId, LatLng(post.latitude, post.longitude)) to null
+        }
+        Log.d(TAG, "마커 개수: ${keyTagMap.size}")
 
         builder.minZoom(4).maxZoom(16)
-
 
         builder.clusterMarkerUpdater(object : DefaultClusterMarkerUpdater() {
             override fun updateClusterMarker(info: ClusterMarkerInfo, marker: Marker) {
@@ -319,11 +331,15 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 marker.height = 220
                 marker.onClickListener = Overlay.OnClickListener {
                     if (it is Marker) {
-
                         val photoItem = keyTagMap.keys.find { item -> item.position == it.position }
                         val id = photoItem?.id
                         Log.d(TAG, "Clicked Marker ID: $id")
 
+                        if (photoItem != null) {
+                            Log.d(TAG, "updateLeafMarker: ???")
+                            SingletonUtil.user?.let { it1 -> uploadPhotoViewModel.getPhotoById(it1.id, photoItem.id) }
+                            Log.d(TAG, "updateLeafMarker: ??? ${photoItem.id}")
+                        }
 
                         val clickedLatLng = it.position
                         Log.d(TAG, "Clicked Marker LatLng: $clickedLatLng")
@@ -331,24 +347,19 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                         val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng, 18.0)
                             .animate(CameraAnimation.Easing)
                         naverMap.moveCamera(cameraUpdate)
+
                     }
                     true
                 }
-
-
             }
         })
 
         val clusterer = builder.build()
         clusterer.addAll(keyTagMap)
         clusterer.map = naverMap
-
     }
-
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
-
-
 }

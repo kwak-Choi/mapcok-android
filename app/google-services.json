@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "975755915582-0n86jcl33rb8pak2o2f1dddg4dkcsa2c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mapcok",
+            "certificate_hash": "eee0d82181d15f68720222b205609993246374f4"
+          }
+        },
+        {
           "client_id": "975755915582-1l2ccmfase4e16lr3rue8bq08046idn2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
