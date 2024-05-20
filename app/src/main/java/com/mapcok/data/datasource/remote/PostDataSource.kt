@@ -10,7 +10,7 @@ interface PostDataSource {
 
     suspend fun registerPost(postParam: PostParam): ResponseData<SuccessData>
 
-    suspend fun deletePhoto(userId: Int, photoId: Int): ResponseData<Unit>
+    suspend fun getPosts(userId: Int): ResponseData<List<PostData>>
 
     suspend fun getPhotoById(userId: Int, photoId: Int): ResponseData<PostData>
 

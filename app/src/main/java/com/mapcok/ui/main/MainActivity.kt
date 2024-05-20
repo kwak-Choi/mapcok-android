@@ -18,7 +18,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.mapcok.R
 import com.mapcok.databinding.ActivityMainBinding
 import com.mapcok.ui.base.BaseActivity
-import com.mapcok.ui.mypage.MyPagePhoto
 import com.mapcok.ui.myphoto.MyPhotoFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -104,15 +103,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    fun onClickListener(view: View) {
-        val tag = view.getTag() as MyPagePhoto
-        photoViewModel.setSelectedPhoto(tag)
-        val newFragment = MyPhotoFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_main, newFragment)
-            .addToBackStack(null)
-            .commit()
-    }
+
 
     //GPS 확인
     private fun checkLocationService(): Boolean {

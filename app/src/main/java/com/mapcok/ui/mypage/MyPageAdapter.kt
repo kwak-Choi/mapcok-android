@@ -2,49 +2,48 @@ package com.mapcok.ui.mypage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mapcok.data.model.PostData
 import com.mapcok.databinding.MyPagePhotoItemBinding
+import com.mapcok.ui.util.DiffUtilCallback
+import com.mapcok.ui.util.SingletonUtil.photo
 
 class MyPageAdapter() :
-  RecyclerView.Adapter<MyPageAdapter.ViewHolder>() {
+  ListAdapter<PostData, MyPageAdapter.MyPageViewHolder>(
+    DiffUtilCallback<PostData>()
+  ) {
 
-  private val photo = mutableListOf<MyPagePhoto>()
 
-  private var onItemClick: ((MyPagePhoto) -> Unit)? = null
+  private var onItemClick: ((PostData) -> Unit)? = null
 
-  inner class ViewHolder(private val binding: MyPagePhotoItemBinding) :
+  class MyPageViewHolder(private val binding: MyPagePhotoItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(photo: MyPagePhoto) {
+    fun bind(photo: PostData) {
       binding.photoDto = photo
       binding.imageView.tag = photo
     }
   }
 
-  override fun onBindViewHolder(holder: MyPageAdapter.ViewHolder, position: Int) {
-    holder.bind(photo[position])
+  override fun onBindViewHolder(holder: MyPageAdapter.MyPageViewHolder, position: Int) {
+    holder.bind(getItem(position))
     holder.itemView.setOnClickListener {
       onItemClick?.let {
-        it(photo[position])
+        it(getItem(position))
       }
     }
   }
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyPageAdapter.ViewHolder {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyPageAdapter.MyPageViewHolder {
     val listItemBinding =
       MyPagePhotoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    return ViewHolder(listItemBinding)
+    return MyPageViewHolder(listItemBinding)
   }
 
-  override fun getItemCount(): Int {
-    return photo.size
-  }
 
-  fun setOnItemClickListener(listener: (MyPagePhoto) -> Unit) {
+  fun setOnItemClickListener(listener: (PostData) -> Unit) {
     onItemClick = listener
   }
 
-  fun addPhotoData(value: List<MyPagePhoto>) {
-    photo.addAll(value)
-    notifyDataSetChanged()
-  }
+
 }

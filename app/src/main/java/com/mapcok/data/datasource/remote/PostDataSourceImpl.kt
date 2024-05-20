@@ -29,12 +29,12 @@ class PostDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun deletePhoto(userId: Int, photoId: Int): ResponseData<Unit> {
-        return postService.deletePhoto(userId, photoId)
+    override suspend fun getPosts(userId: Int): ResponseData<List<PostData>> {
+       return postService.getPosts(userId)
     }
 
     override suspend fun getPhotoById(userId: Int, photoId: Int): ResponseData<PostData> {
-        return postService.getPhotoById(userId, photoId)
+        TODO("Not yet implemented")
     }
 
     override suspend fun getPhotolist(userId: Int): ResponseData<List<PostData>> {

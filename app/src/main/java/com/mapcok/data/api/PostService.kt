@@ -14,12 +14,11 @@ import retrofit2.http.Query
 
 interface PostService {
 
-    // 특정 userId와 photoId로 사진 하나 가져오기
-    @GET("{userId}/photo/{photoId}")
-    suspend fun getPhotoById(
+    // 게시물 조회
+    @GET("/post/{userId}")
+    suspend fun getPosts(
         @Path("userId") userId: Int,
-        @Path("photoId") photoId: Int
-    ): ResponseData<PostData>
+    ): ResponseData<List<PostData>>
 
 
     @GET("{userId}/photos")

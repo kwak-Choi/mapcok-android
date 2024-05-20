@@ -6,7 +6,7 @@
     <data>
         <variable
             name="photoDto"
-            type="com.mapcok.ui.mypage.MyPagePhoto" />
+            type="com.mapcok.data.model.PostData" />
 
     </data>
 
@@ -19,7 +19,7 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            imageDrawable="@{photoDto.src}"
+            setImage="@{photoDto.photoUrl}"
             android:background="@drawable/square_backgroud_border_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
