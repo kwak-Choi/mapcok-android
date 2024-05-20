@@ -17,4 +17,9 @@ class UserDataSourceImpl @Inject constructor(
   override suspend fun getUserInfo(userEmail: String): ResponseData<UserData> {
     return userService.getUserInfo(userEmail)
   }
+
+  override suspend fun getUsers(): ResponseData<List<UserData>> {
+    return userService.getUsers()
+
+  }
 }

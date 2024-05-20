@@ -26,3 +26,12 @@ interface DataSourceModule {
         userPhotoDataSourceImpl: PostDataSourceImpl
     ): PostDataSource
 }
+  @Singleton
+  @Binds
+  fun provideLoginDataSource(
+      loginDataSourceImpl: UserDataSourceImpl
+  ) : UserDataSource
+
+
+
+}

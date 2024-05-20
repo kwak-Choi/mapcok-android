@@ -40,7 +40,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
   private fun observeLoginSuccess() {
     splashViewModel.loginSuccess.observe(this) {
-      if (it) {
+      if(it) {
         initGoActivity(this@SplashActivity, MainActivity::class.java)
       }else{
         initGoActivity(this@SplashActivity, LoginActivity::class.java)

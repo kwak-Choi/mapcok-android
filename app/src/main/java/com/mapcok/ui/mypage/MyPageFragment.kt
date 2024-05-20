@@ -1,24 +1,14 @@
 package com.mapcok.ui.mypage
 
+
 import MyPhotoViewModel
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ListAdapter
-import com.google.android.play.integrity.internal.m
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMyPageBinding
 import com.mapcok.ui.base.BaseFragment
-import kotlinx.coroutines.launch
-
-
-import com.mapcok.ui.myphoto.MyPhotoFragment
+import com.mapcok.ui.util.SingletonUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -27,53 +17,24 @@ private const val TAG = "MyPageFragment_싸피"
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_page) {
     private val photoViewModel: MyPhotoViewModel by activityViewModels()
-    private lateinit var listAdapter: MyPageAdapter
-    private lateinit var dao: MyPageDao
-
+    private lateinit var myPageAdapter: MyPageAdapter
 
     override fun initView() {
+        initData()
+        initAdapter()
+    }
+    private fun initData(){
+        binding.userData = SingletonUtil.user
+    }
 
 
-        dao = MyPageDao(requireContext()).apply {
-            this.dbOpenHelper(requireContext())
-            this.open()
-            //지금은 db에서 가져왔지만 나중에는 server에서 가져오도록
-        }
+    private fun initAdapter(){
+        myPageAdapter = MyPageAdapter()
+        binding.rcMyPagePhoto.adapter = myPageAdapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            runCatching {
-                dao.selectAllPhotos()
-            }.onSuccess {
-                listAdapter = MyPageAdapter(requireContext(), it.toMutableList())
-                binding.mypagePhotoRecycler.apply {
-                    adapter = listAdapter
-                }
-                clickPhoto()
-            }.onFailure {
 
-            }
-        }
-
-        listAdapter.setOnItemClickListener { myPagePhoto ->
+        myPageAdapter.setOnItemClickListener { myPagePhoto ->
             photoViewModel.setSelectedPhoto(myPagePhoto)
-            this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
-        }
-
-        binding.photoCnt.text = listAdapter.itemCount.toString()
-
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        dao.close()
-    }
-
-
-
-    //사진 클릭
-    private fun clickPhoto(){
-        listAdapter.setOnItemClickListener {
             this.findNavController().navigate(R.id.action_myPageFragment_to_myPhotoFragment)
         }
     }

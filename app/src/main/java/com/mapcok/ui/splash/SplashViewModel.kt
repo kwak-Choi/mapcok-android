@@ -44,10 +44,12 @@ class SplashViewModel @Inject constructor(
           }
         }
         is ResultWrapper.GenericError -> {
+          setLoginSuccess(false)
           Timber.d("로그인 에러 ${response.message}")
         }
 
         is ResultWrapper.NetworkError -> {
+          setLoginSuccess(false)
           Timber.d("로그인 네트워크 에러")
         }
       }

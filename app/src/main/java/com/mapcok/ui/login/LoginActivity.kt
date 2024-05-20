@@ -53,7 +53,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                       loginViewModel.signUp(
                         UserParam(
                           userEmail = task.result.user?.email.toString(),
-                          userName = task.result.user?.displayName.toString()
+                          userName = task.result.user?.displayName.toString(),
+                          userImage = task.result.user?.photoUrl.toString()
                         )
                       )
                     } ?: Timber.e("FirebaseIdToken is null.")

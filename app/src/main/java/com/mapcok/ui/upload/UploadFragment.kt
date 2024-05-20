@@ -19,6 +19,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+
+import com.mapcok.ui.util.SingletonUtil
+import timber.log.Timber
+
 import java.io.File
 
 private const val TAG = "UploadFragment_싸피"
@@ -36,7 +40,7 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
         binding.backMap.setOnClickListener {
             findNavController().navigate(R.id.action_uploadFragment_to_mapFragment)
         }
-
+        Timber.d("확인 ${SingletonUtil.user}")
         val imageUriString = args.imagePath
         val imageUri = Uri.parse(imageUriString)
         Log.d(TAG, "initView: $imageUri, $imageUriString")

@@ -18,6 +18,9 @@ interface UserService {
 
   @GET("user")
   suspend fun getUserInfo(
-    @Query("userEmail") userEmail : String
-  ) : ResponseData<UserData>
+    @Query("userEmail") userEmail: String
+  ): ResponseData<UserData>
+
+  @GET("users")
+  suspend fun getUsers(): ResponseData<List<UserData>>
 }
