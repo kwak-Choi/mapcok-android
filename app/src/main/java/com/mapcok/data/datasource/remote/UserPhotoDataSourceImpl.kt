@@ -11,7 +11,12 @@ class UserPhotoDataSourceImpl @Inject constructor(
 ) : UserPhotoDataSource {
 
     override suspend fun addPhoto(userPhotoParam: UserPhotoParam): ResponseData<UserPhotoData> {
-        return userPhotoService.addPhoto(userPhotoParam.userId, userPhotoParam)
+        return userPhotoService.addPhoto(
+            userId = userPhotoParam.userId,
+            imageFile = userPhotoParam.imageFile,
+            latitude = userPhotoParam.latitude,
+            longitude = userPhotoParam.longitude
+        )
     }
 
     override suspend fun deletePhoto(userId: Int, photoId: Int): ResponseData<Unit> {

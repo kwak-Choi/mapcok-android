@@ -18,6 +18,8 @@ import androidx.annotation.Nullable
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -25,6 +27,7 @@ import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
 import com.mapcok.ui.map.MapFragmentDirections
+import com.mapcok.ui.photo.viewmodel.UploadPhotoViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
@@ -47,18 +50,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.properties.Delegates
 
 
 private const val TAG = "MapFragment_싸피"
 
 @AndroidEntryPoint
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
-
+    private val uploadPhotoViewModel: UploadPhotoViewModel by activityViewModels()
     private lateinit var mapView: MapFragment
     private lateinit var locationSource: FusedLocationSource
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var naverMap: NaverMap
-    private lateinit var currentLatLng: LatLng
+    private var lat by Delegates.notNull<Double>()
+    private var lon by Delegates.notNull<Double>()
     lateinit var file: File
 
     private val builder = Clusterer.Builder<PhotoItem>()
@@ -67,7 +72,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMapView()
-        checkLocationPermissionAndFetchLocation()
+//        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            fetchLocation()
+//        }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         binding.loadMenu.setOnClickListener {
             if (binding.loadCamera.visibility == View.VISIBLE) {
@@ -84,40 +91,32 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         }
 
     }
-    private fun checkLocationPermissionAndFetchLocation() {
-        // 위치 권한 체크
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // 권한이 없으면 권한 요청
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-            // 위치 정보 가져오기
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    currentLatLng = LatLng(location.latitude, location.longitude)
-                    Log.d(TAG, "Current LatLng: $currentLatLng")
-                } else {
-                    Log.e(TAG, "Failed to get current location")
-                }
-            }
-        }
-    }
+//    private fun fetchLocation() {
+//        if (ActivityCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+//                if (location != null) {
+//                    lat = location.latitude
+//                    lon = location.longitude
+//                    uploadPhotoViewModel.setLocation(lat, lon)
+//                    Log.d(TAG, "Location fetched: $lat,$lon")
+//                } else {
+//                    Log.e(TAG, "Failed to get current location")
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    fun onPermissionGranted() {
+//        fetchLocation()
+//    }
 
     private fun showFab() {
         binding.loadCamera.visibility = View.VISIBLE
@@ -152,8 +151,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         file = createImageFile()
         val photoUri = FileProvider.getUriForFile(requireContext(), "com.mapcok.fileprovider", file)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-        intent.putExtra("current_latlng", currentLatLng) // 현재 위치 정보를 번들에 추가
-        Log.d(TAG, "capture: $currentLatLng")
         requestCamera.launch(intent)
     }
 

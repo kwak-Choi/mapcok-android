@@ -20,6 +20,15 @@ class UploadPhotoViewModel @Inject constructor(
     private val userPhotoDataSource: UserPhotoDataSource
 ) : ViewModel() {
 
+
+    private val _location = MutableLiveData<Pair<Double, Double>>()
+    val location: LiveData<Pair<Double, Double>> get() = _location
+
+    fun setLocation(lat: Double, lon: Double) {
+        _location.value = Pair(lat, lon)
+    }
+
+
     private val _photoAddedSuccess = MutableLiveData<Boolean>()
     val photoAddedSuccess: LiveData<Boolean> get() = _photoAddedSuccess
 

@@ -32,7 +32,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
           splashViewModel.getUserInfo(it)
         },
         cancel = {
-          initGoActivity(this@SplashActivity, MainActivity::class.java)
+          initGoActivity(this@SplashActivity, LoginActivity::class.java)
         }
       )
     }
