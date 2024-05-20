@@ -1,6 +1,8 @@
 package com.mapcok.ui.upload
 
+import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -30,7 +32,6 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
     initData()
     clickBackBtn()
     clickSaveBtn()
-    observeUploadSuccess()
     hideBottomNavigation()
 
   }
@@ -60,10 +61,13 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
               longitude
             )
           )
+          Log.d(TAG, "clickSaveBtn: 나 눌려??")
+          observeUploadSuccess()
         } else {
           Toast.makeText(requireActivity(), "게시글 내용을 입력해주세요!", Toast.LENGTH_SHORT).show()
         }
       }
+
     }
   }
 
@@ -78,9 +82,11 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
 
   //업로드 관찰
   private fun observeUploadSuccess() {
+    Log.d(TAG, "observeUploadSuccess: 나 부ㅡㄹ려??")
     uploadPhotoViewModel.registerPostSuccess.observe(viewLifecycleOwner) { success ->
       if (success) {
         Toast.makeText(requireContext(), "사진 업로드 성공", Toast.LENGTH_SHORT).show()
+//        binding.etContent.text=null
         this.findNavController().popBackStack()
       } else {
         Toast.makeText(requireContext(), "사진 업로드 실패", Toast.LENGTH_SHORT).show()

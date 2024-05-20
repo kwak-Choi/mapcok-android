@@ -38,6 +38,7 @@
             android:background="@drawable/round_post_btn"
             android:backgroundTint="#00ACEE"
             android:fontFamily="@font/pretendard_bold"
+            android:clickable="true"
             android:padding="3dp"
             android:text="게시하기"
             android:textSize="14sp"
