@@ -5,39 +5,38 @@
 
     <data>
         <variable
-          name="userData"
-          type="com.mapcok.data.model.UserData" />
+            name="userData"
+            type="com.mapcok.data.model.UserData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-      android:background="@color/background"
         tools:context=".ui.mypage.MyPageFragment">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_profile"
+            setCircleProfileImage="@{userData.userImage}"
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="50dp"
             app:civ_border_width="2dp"
-            setCircleProfileImage="@{userData.userImage}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-             />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc_my_page_photo"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/banner" />
+            app:layout_constraintTop_toBottomOf="@+id/button2"
+            app:spanCount="3" />
 
         <TextView
             android:id="@+id/text_nickname"
@@ -47,22 +46,10 @@
             android:layout_marginTop="50dp"
             android:fontFamily="@font/pretendard_semibold"
             android:text="@{userData.userName}"
+            android:textColor="@color/black"
             android:textSize="25sp"
             app:layout_constraintStart_toEndOf="@+id/img_profile"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/text_photo_cnt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="42dp"
-            android:layout_marginTop="30dp"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="88"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/img_profile"
-            app:layout_constraintTop_toBottomOf="@+id/text_nickname" />
-
 
         <TextView
             android:id="@+id/text_post"
@@ -72,21 +59,40 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_light"
             android:text="게시물"
+            android:textColor="@color/black"
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@+id/img_profile"
             app:layout_constraintTop_toBottomOf="@+id/text_photo_cnt" />
 
-
-
-        <ImageView
-            android:id="@+id/banner"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/text_photo_cnt"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_bold"
+            android:textAlignment="center"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_post"
+            app:layout_constraintEnd_toEndOf="@+id/text_post"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="@+id/text_post"
+            app:layout_constraintTop_toBottomOf="@+id/text_nickname" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="45dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="0dp"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="프로필 편집"
+            android:background="@drawable/rounded_corner_border"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_profile"
-            app:srcCompat="@drawable/common_google_signin_btn_text_light_normal" />
+            app:layout_constraintTop_toBottomOf="@+id/img_profile" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
