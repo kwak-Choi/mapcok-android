@@ -11,6 +11,9 @@
         <variable
             name="photoDto"
             type="com.mapcok.ui.mypage.MyPagePhoto" />
+        <variable
+            name="userData"
+            type="com.mapcok.data.model.UserData" />
 
     </data>
 
@@ -36,10 +39,9 @@
             setSimpleTime="@{photoDto.date}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/location"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -48,6 +50,7 @@
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
             android:text="@{photoDto.location}"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
@@ -61,7 +64,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="60dp"
-            android:src="@drawable/kokage"
+            setCircleProfileImage="@{userData.userImage}"
             app:civ_border_color="#FF7C81"
             app:civ_border_overlay="true"
             app:civ_border_width="2dp"
@@ -75,7 +78,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="60dp"
             android:fontFamily="@font/pretendard_semibold"
-            android:text="츠무기 코카게"
+            android:text="@{userData.userName}"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/image"
@@ -91,5 +94,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/returnback" />
+
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_border"
+            android:text="게시글 수정"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/location"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="게시글 삭제"
+            android:textColor="#ff0000"
+            android:background="@drawable/button_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/location" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

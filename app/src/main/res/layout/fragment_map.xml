@@ -35,6 +35,7 @@
             android:visibility="invisible"
             app:tint="@null"
             app:fabCustomSize="45dp"
+            app:borderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/camera_1" />
@@ -51,6 +52,7 @@
             app:tint="@null"
             android:visibility="invisible"
             android:padding="4dp"
+            app:borderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/frgaaa" />
@@ -64,6 +66,7 @@
             android:clickable="true"
             app:tint="@null"
             android:backgroundTint="#D5E1FF"
+            app:borderWidth="0dp"
             app:fabCustomSize="55dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

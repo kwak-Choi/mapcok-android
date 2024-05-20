@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/mapFragment"
-        android:title="@string/map" />
+        android:title="@string/map"
+        android:icon="@drawable/selector_menu_icon"/>
 
     <item
         android:id="@+id/userListFragment"
-        android:title="@string/user_list" />
+        android:title="@string/user_list"
+        android:icon="@drawable/user_list"/>
 
     <item
         android:id="@+id/myPageFragment"
-        android:title="@string/my_page" />
+        android:title="@string/my_page"
+        android:icon="@drawable/mypage"/>
 </menu>

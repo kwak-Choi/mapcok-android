@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <!-- ViewModel or other data binding variables -->
+        <variable
+            name="userData"
+            type="com.mapcok.data.model.UserData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,6 +22,7 @@
             android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
+
             android:backgroundTint="@color/black"
             android:scaleType="fitCenter"
             android:src="@drawable/nobagcancel"
@@ -29,12 +32,13 @@
         <Button
             android:id="@+id/saveBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/round_post_btn"
             android:backgroundTint="#00ACEE"
             android:fontFamily="@font/pretendard_bold"
-            android:padding="5dp"
+            android:padding="3dp"
             android:text="게시하기"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -55,12 +59,12 @@
                 android:paddingBottom="8dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:src="@drawable/kokage"
                     android:id="@+id/img_my_profile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/kokage"
                     app:civ_border_color="#FF7C81"
                     app:civ_border_overlay="true"
                     app:civ_border_width="2dp"

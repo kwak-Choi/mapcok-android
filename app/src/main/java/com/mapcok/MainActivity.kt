@@ -112,6 +112,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             supportFragmentManager.findFragmentById(R.id.nav_host_main) as NavHostFragment
         with(binding) {
             bottomNavigationMain.apply {
+                bottomNavigationMain.itemIconTintList = null
                 setupWithNavController(navHostFragment.navController)
             }
         }
