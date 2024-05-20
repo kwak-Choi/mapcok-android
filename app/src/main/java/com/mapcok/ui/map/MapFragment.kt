@@ -1,7 +1,11 @@
 package com.mapcok.ui.map
+
+import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -11,12 +15,20 @@ import androidx.annotation.Nullable
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.Nullable
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.mapcok.R
 import com.mapcok.databinding.FragmentMapBinding
 import com.mapcok.ui.base.BaseFragment
 import com.mapcok.ui.map.MapFragmentDirections
+import com.mapcok.ui.photo.viewmodel.UploadPhotoViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
@@ -39,16 +51,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.properties.Delegates
 
 
 private const val TAG = "MapFragment_싸피"
 
 @AndroidEntryPoint
 class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
-
+    private val uploadPhotoViewModel: UploadPhotoViewModel by activityViewModels()
     private lateinit var mapView: MapFragment
     private lateinit var locationSource: FusedLocationSource
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var naverMap: NaverMap
+    private var lat by Delegates.notNull<Double>()
+    private var lon by Delegates.notNull<Double>()
     lateinit var file: File
 
     private val builder = Clusterer.Builder<PhotoItem>()
@@ -57,6 +73,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMapView()
+        checkLocationPermissionAndFetchLocation()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         binding.loadMenu.setOnClickListener {
             if (binding.loadCamera.visibility == View.VISIBLE) {
                 hideFab()
@@ -71,6 +89,42 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             getPicture()
         }
 
+    }
+    private fun checkLocationPermissionAndFetchLocation() {
+        // 위치 권한 체크
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // 권한이 없으면 권한 요청
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+            // 위치 정보 가져오기
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    lat = location.latitude
+                    lon = location.longitude
+                    uploadPhotoViewModel.setLocation(lat, lon)
+                    Log.d(TAG, "checkLocationPermissionAndFetchLocation: $lat,$lon")
+                } else {
+                    Log.e(TAG, "Failed to get current location")
+                }
+            }
+        }
     }
 
     private fun showFab() {
@@ -108,6 +162,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
         requestCamera.launch(intent)
     }
+
+
+
     lateinit var currentPhotoPath: String
 
     private fun createImageFile(): File {
@@ -229,6 +286,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         naverMap.extent = LatLngBounds(LatLng(33.0041, 124.6094), LatLng(38.6140, 131.5928))
 
         setMarkers()
+
 
 
     }
