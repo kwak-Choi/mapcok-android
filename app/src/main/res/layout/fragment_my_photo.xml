@@ -5,12 +5,10 @@
     >
 
     <data>
+
         <variable
-            name="activity"
-            type="com.mapcok.ui.main.MainActivity" />
-        <variable
-            name="photoDto"
-            type="com.mapcok.ui.mypage.MyPagePhoto" />
+            name="postData"
+            type="com.mapcok.data.model.PostData" />
         <variable
             name="userData"
             type="com.mapcok.data.model.UserData" />
@@ -26,7 +24,7 @@
 
         <ImageView
             android:id="@+id/image"
-            imageDrawable="@{photoDto.src}"
+            imageDrawable="@{postData.photoUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +34,7 @@
 
         <TextView
             android:id="@+id/date"
-            setSimpleTime="@{photoDto.date}"
+            android:text="asdf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
@@ -51,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="80dp"
-            android:text="@{photoDto.location}"
+            android:text="asd"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

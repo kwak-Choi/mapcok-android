@@ -7,4 +7,6 @@ object SingletonUtil {
 
   var user : UserData?=null
   var photo : PostData?=null
+
+  val baseUrl = "http://192.168.33.126:8080/"
 }

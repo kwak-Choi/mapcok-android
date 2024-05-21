@@ -20,9 +20,9 @@ class MyPhotoFragment : BaseFragment<FragmentMyPhotoBinding>(R.layout.fragment_m
     private val photoViewModel: MyPhotoViewModel by activityViewModels()
 
     override fun initView() {
-        photoViewModel.selectedPhoto.observe(viewLifecycleOwner) { photo ->
-            binding.photoDto = photo
-        }
+//        photoViewModel.selectedPhoto.observe(viewLifecycleOwner) { photo ->
+//            binding.photoDto = photo
+//        }
         hideBottomNavigation()
         binding.backmypage.setOnClickListener {
           it.findNavController().popBackStack()

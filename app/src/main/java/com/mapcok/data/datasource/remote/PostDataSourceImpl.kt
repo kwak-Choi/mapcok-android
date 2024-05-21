@@ -37,7 +37,8 @@ class PostDataSourceImpl @Inject constructor(
         return postService.getPhotoById(userId, photoId)
     }
 
-    override suspend fun getPhotolist(userId: Int): ResponseData<List<PostData>> {
-        return postService.getPhotolist(userId)
+    //게시물들 조회
+    override suspend fun getPosts(userId: Int): ResponseData<List<PostData>> {
+        return postService.getPosts(userId)
     }
 }

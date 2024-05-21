@@ -22,8 +22,8 @@ interface PostService {
     ): ResponseData<PostData>
 
 
-    @GET("{userId}/photos")
-    suspend fun getPhotolist(
+    @GET("/post/{userId}")
+    suspend fun getPosts(
         @Path("userId") userId: Int
     ): ResponseData<List<PostData>>
 
