@@ -25,6 +25,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
     observePostData()
   }
 
+
   private fun initData() {
     binding.userData = SingletonUtil.user
 

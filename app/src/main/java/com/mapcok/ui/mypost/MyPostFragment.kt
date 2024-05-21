@@ -19,6 +19,13 @@ class MyPostFragment : BaseFragment<FragmentMyPhotoBinding>(R.layout.fragment_my
     initData()
     clickBackBtn()
     hideBottomNavigation()
+    createOption()
+  }
+
+  private fun createOption() {
+    binding.option.setOnClickListener {
+
+    }
   }
 
   private fun initData() {
