@@ -1,6 +1,5 @@
 package com.mapcok
 
-import MyPostViewModel
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,14 +16,18 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mapcok.databinding.ActivityMainBinding
 import com.mapcok.ui.base.BaseActivity
+import com.mapcok.ui.mypost.MyPostFragment
+import com.mapcok.ui.mypost.MyPostMenuFragment
+import com.mapcok.ui.mypost.MyPostViewModel
 
 
 private const val TAG = "MainActivity_싸피"
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main),
+    MyPostMenuFragment.OnEditOptionClickListener, MyPostMenuFragment.OnDeleteOptionClickListener {
 
     private lateinit var navHostFragment: NavHostFragment
     private val ACCESS_FINE_LOCATION = 1000
-    private val photoViewModel:MyPostViewModel by viewModels()
+    private val photoViewModel: MyPostViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             permissionCheck()   
         }
     }
+
 
     // 권한 체크
     private fun permissionCheck() {
@@ -112,5 +116,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
         }
 
+    }
+
+    override fun onEditOptionClicked() {
+        val myPostFragment = supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.firstOrNull { it is MyPostFragment } as? MyPostFragment
+        myPostFragment?.setupEditOption()
+    }
+
+    override fun OnDeleteOptionClicked() {
+        val myPostFragment = supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.firstOrNull { it is MyPostFragment } as? MyPostFragment
+        myPostFragment?.setupDeleteOption()
     }
 }

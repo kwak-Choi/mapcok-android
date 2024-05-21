@@ -1,6 +1,5 @@
 package com.mapcok.ui.main
 
-import MyPostViewModel
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,10 +19,12 @@ import com.mapcok.databinding.ActivityMainBinding
 import com.mapcok.ui.base.BaseActivity
 import com.mapcok.ui.mypage.MyPagePhoto
 import com.mapcok.ui.mypost.MyPostFragment
+import com.mapcok.ui.mypost.MyPostMenuFragment
+import com.mapcok.ui.mypost.MyPostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main), MyPostMenuFragment.OnEditOptionClickListener,MyPostMenuFragment.OnDeleteOptionClickListener{
 
     private lateinit var navHostFragment: NavHostFragment
     private val ACCESS_FINE_LOCATION = 1000
@@ -137,5 +138,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
         }
 
+    }
+
+    override fun onEditOptionClicked() {
+        val myPostFragment = supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.firstOrNull { it is MyPostFragment } as? MyPostFragment
+        myPostFragment?.setupEditOption()
+    }
+
+    override fun OnDeleteOptionClicked() {
+        val myPostFragment = supportFragmentManager.primaryNavigationFragment?.childFragmentManager?.fragments?.firstOrNull { it is MyPostFragment } as? MyPostFragment
+        myPostFragment?.setupDeleteOption()
     }
 }
