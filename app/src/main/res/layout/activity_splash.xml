@@ -14,13 +14,12 @@
     >
 
     <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:background="@drawable/ic_mapcok_remove"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="220dp"
+        android:background="@drawable/mapcok_splash"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
