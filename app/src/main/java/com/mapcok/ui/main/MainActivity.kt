@@ -1,6 +1,6 @@
 package com.mapcok.ui.main
 
-import MyPhotoViewModel
+import MyPostViewModel
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,7 +19,7 @@ import com.mapcok.R
 import com.mapcok.databinding.ActivityMainBinding
 import com.mapcok.ui.base.BaseActivity
 import com.mapcok.ui.mypage.MyPagePhoto
-import com.mapcok.ui.myphoto.MyPhotoFragment
+import com.mapcok.ui.mypost.MyPostFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,7 +27,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private lateinit var navHostFragment: NavHostFragment
     private val ACCESS_FINE_LOCATION = 1000
-    private val photoViewModel: MyPhotoViewModel by viewModels()
+    private val photoViewModel: MyPostViewModel by viewModels()
 
 
     // 권한 체크
@@ -107,7 +107,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     fun onClickListener(view: View) {
         val tag = view.getTag() as MyPagePhoto
         photoViewModel.setSelectedPhoto(tag)
-        val newFragment = MyPhotoFragment()
+        val newFragment = MyPostFragment()
         supportFragmentManager.beginTransaction()
             .replace(R.id.nav_host_main, newFragment)
             .addToBackStack(null)
