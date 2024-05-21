@@ -49,6 +49,10 @@
             android:name="imagePath"
             app:argType="string"
             />
+        <argument
+            android:name="type"
+            app:argType="boolean"
+            android:defaultValue="true"/>
     </fragment>
 
    <fragment
