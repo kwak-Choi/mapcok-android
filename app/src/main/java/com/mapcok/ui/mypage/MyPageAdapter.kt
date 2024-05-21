@@ -2,29 +2,32 @@ package com.mapcok.ui.mypage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mapcok.data.model.PostData
 import com.mapcok.databinding.MyPagePhotoItemBinding
+import com.mapcok.ui.util.DiffUtilCallback
 
 class MyPageAdapter() :
-  RecyclerView.Adapter<MyPageAdapter.ViewHolder>() {
+  ListAdapter<PostData, MyPageAdapter.ViewHolder>(
+    DiffUtilCallback<PostData>()
+  ) {
 
-  private val photo = mutableListOf<MyPagePhoto>()
 
-  private var onItemClick: ((MyPagePhoto) -> Unit)? = null
+  private var onItemClick: ((PostData) -> Unit)? = null
 
-  inner class ViewHolder(private val binding: MyPagePhotoItemBinding) :
+  class ViewHolder(private val binding: MyPagePhotoItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(photo: MyPagePhoto) {
-      binding.photoDto = photo
-      binding.imageView.tag = photo
+    fun bind(postData: PostData) {
+      binding.postData = postData
     }
   }
 
   override fun onBindViewHolder(holder: MyPageAdapter.ViewHolder, position: Int) {
-    holder.bind(photo[position])
+    holder.bind(getItem(position))
     holder.itemView.setOnClickListener {
       onItemClick?.let {
-        it(photo[position])
+        it(getItem(position))
       }
     }
   }
@@ -35,16 +38,9 @@ class MyPageAdapter() :
     return ViewHolder(listItemBinding)
   }
 
-  override fun getItemCount(): Int {
-    return photo.size
-  }
 
-  fun setOnItemClickListener(listener: (MyPagePhoto) -> Unit) {
+  fun setOnItemClickListener(listener: (PostData) -> Unit) {
     onItemClick = listener
   }
 
-  fun addPhotoData(value: List<MyPagePhoto>) {
-    photo.addAll(value)
-    notifyDataSetChanged()
-  }
 }

@@ -6,6 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.mapcok.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,7 +29,7 @@ fun setHour(textView: TextView, date: Long) {
 }
 
 @BindingAdapter("setCircleProfileImage")
-fun setImage(imageView: ImageView, src: String?) {
+fun setCircleProfileImage(imageView: ImageView, src: String?) {
   src?.let {
     Glide.with(imageView).load(src)
       .override(100.dpToPx,100.dpToPx)
@@ -36,3 +37,15 @@ fun setImage(imageView: ImageView, src: String?) {
       .into(imageView)
   }
 }
+
+
+@BindingAdapter("setImage")
+fun setImage(imageView: ImageView, src: String?) {
+  src?.let {
+    val url = "${SingletonUtil.baseUrl}attach/images/image" + src
+    Glide.with(imageView).load(url)
+      .placeholder(R.drawable.camera_1)
+      .into(imageView)
+  }
+}
+

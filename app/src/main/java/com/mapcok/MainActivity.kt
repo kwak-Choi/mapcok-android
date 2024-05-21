@@ -1,7 +1,6 @@
 package com.mapcok
 
-import MyPhotoViewModel
-import android.Manifest.permission.ACCESS_FINE_LOCATION
+import MyPostViewModel
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,19 +8,15 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.mapcok.databinding.ActivityMainBinding
 import com.mapcok.ui.base.BaseActivity
-import com.mapcok.ui.mypage.MyPagePhoto
 
 
 private const val TAG = "MainActivity_싸피"
@@ -29,7 +24,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private lateinit var navHostFragment: NavHostFragment
     private val ACCESS_FINE_LOCATION = 1000
-    private val photoViewModel:MyPhotoViewModel by viewModels()
+    private val photoViewModel:MyPostViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
