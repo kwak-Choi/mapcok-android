@@ -34,7 +34,7 @@ class MyPageViewModel @Inject constructor(
   fun getPosts(userId: Int) {
     viewModelScope.launch {
       when (val response = safeApiCall(Dispatchers.IO) {
-        postDataSource.getPosts(userId)
+        postDataSource.getUserPosts(userId)
       }) {
         is ResultWrapper.Success -> {
           setUserPost(response.data.data)

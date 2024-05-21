@@ -23,9 +23,9 @@ interface PostService {
 
 
 
-    @GET("post")
+    @GET("post/{userId}")
     suspend fun getUserPosts(
-        @Query("userId") userId: Int
+        @Path("userId") userId: Int
     ): ResponseData<List<PostData>>
 
 
