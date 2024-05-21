@@ -1,6 +1,7 @@
 package com.mapcok.data.model
 
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.Parcelize
 
 
@@ -12,4 +13,5 @@ data class PostData(
     val content : String,
     val latitude : Double,
     val longitude : Double
-) : Parcelable
+):Parcelable
+

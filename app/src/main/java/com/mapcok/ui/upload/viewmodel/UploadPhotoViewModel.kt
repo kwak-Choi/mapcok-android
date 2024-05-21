@@ -1,12 +1,14 @@
 package com.mapcok.ui.photo.viewmodel
 
+import android.view.animation.Transformation
+import androidx.constraintlayout.widget.ConstraintSet.Transform
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.mapcok.data.datasource.remote.PostDataSource
 import com.mapcok.data.model.PostData
-import com.mapcok.data.model.UserData
 import com.mapcok.data.model.param.PostParam
 import com.mapcok.ui.util.SingletonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +33,14 @@ class UploadPhotoViewModel @Inject constructor(
         _location.value = Pair(lat, lon)
     }
 
-    private val _postList = MutableLiveData<List<PostData>?>()
-    val postList: LiveData<List<PostData>?> get() = _postList
+    private val _postList = MutableLiveData<List<PostData>>()
+    val postList: LiveData<List<PostData>> get() = _postList
+
+    val postListSize: LiveData<Int> = _postList.map {
+        it.size
+    }
+
+
 
     fun getUserPosts(userId: Int) {
         viewModelScope.launch {
@@ -55,10 +63,8 @@ class UploadPhotoViewModel @Inject constructor(
         }
     }
 
-
     private val _selectedPost = MutableLiveData<PostData?>()
     val selectedPost: MutableLiveData<PostData?> get() = _selectedPost
-
     fun getPhotoById(userId: Int, photoId: Int) {
         viewModelScope.launch {
             when (val response = safeApiCall(Dispatchers.IO) {
