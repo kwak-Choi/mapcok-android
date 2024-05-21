@@ -14,5 +14,5 @@ interface PostDataSource {
 
     suspend fun getPhotoById(userId: Int, photoId: Int): ResponseData<PostData>
 
-    suspend fun getPosts(userId: Int): ResponseData<List<PostData>>
+    suspend fun getUserPosts(userId: Int): ResponseData<List<PostData>>
 }

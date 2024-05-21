@@ -15,12 +15,13 @@ class PhotoItem(val id:Int,private var position: LatLng) : ClusteringKey {//TedC
 
     var snippet: String? = null
 
-    constructor(lat: Double, lng: Double) : this(1,LatLng(lat, lng)) {
+    constructor(id: Int, lat: Double, lng: Double) : this(id, LatLng(lat, lng)) {
         title = null
         snippet = null
     }
 
-    constructor(lat: Double, lng: Double, title: String?, snippet: String?) : this(1,
+    constructor(id: Int, lat: Double, lng: Double, title: String?, snippet: String?) : this(
+        id,
         LatLng(lat, lng)
     ) {
         this.title = title

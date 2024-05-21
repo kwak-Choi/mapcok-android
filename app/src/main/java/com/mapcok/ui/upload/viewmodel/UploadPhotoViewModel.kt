@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapcok.data.datasource.remote.PostDataSource
+import com.mapcok.data.model.PostData
 import com.mapcok.data.model.UserData
 import com.mapcok.data.model.param.PostParam
 import com.mapcok.ui.util.SingletonUtil
@@ -27,6 +28,55 @@ class UploadPhotoViewModel @Inject constructor(
 
     fun setLocation(lat: Double, lon: Double) {
         _location.value = Pair(lat, lon)
+    }
+
+    private val _postList = MutableLiveData<List<PostData>?>()
+    val postList: LiveData<List<PostData>?> get() = _postList
+
+    fun getUserPosts(userId: Int) {
+        viewModelScope.launch {
+            when (val response = safeApiCall(Dispatchers.IO) {
+                postDataSource.getUserPosts(userId)
+            }) {
+                is ResultWrapper.Success -> {
+                    _postList.value = response.data.data?.let {
+                        if (it != _postList.value) it else _postList.value
+                    }
+                    Timber.d("게시물 목록 불러오기 성공")
+                }
+                is ResultWrapper.GenericError -> {
+                    Timber.d("게시물 목록 불러오기 에러 ${response.message}")
+                }
+                is ResultWrapper.NetworkError -> {
+                    Timber.d("게시물 목록 불러오기 네트워크 에러")
+                }
+            }
+        }
+    }
+
+
+    private val _selectedPost = MutableLiveData<PostData?>()
+    val selectedPost: MutableLiveData<PostData?> get() = _selectedPost
+
+    fun getPhotoById(userId: Int, photoId: Int) {
+        viewModelScope.launch {
+            when (val response = safeApiCall(Dispatchers.IO) {
+                Timber.d("${userId}, ${photoId} ???")
+                postDataSource.getPhotoById(userId, photoId)
+            }) {
+                is ResultWrapper.Success -> {
+                    _selectedPost.value = response.data.data
+                    Timber.d("게시물 불러오기 성공")
+
+                }
+                is ResultWrapper.GenericError -> {
+                    Timber.d("게시물 불러오기 에러 ${response.message}")
+                }
+                is ResultWrapper.NetworkError -> {
+                    Timber.d("게시물 불러오기 네트워크 에러")
+                }
+            }
+        }
     }
 
 
