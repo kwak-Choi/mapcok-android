@@ -1,8 +1,6 @@
 package com.mapcok.ui.upload
 
-import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -17,6 +15,7 @@ import com.mapcok.ui.photo.viewmodel.UploadPhotoViewModel
 import com.mapcok.ui.util.SingletonUtil
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import java.io.File
 
 private const val TAG = "UploadFragment_싸피"
 
@@ -26,8 +25,8 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
   private val args: UploadFragmentArgs by navArgs()
   private val uploadPhotoViewModel: UploadPhotoViewModel by activityViewModels()
   private lateinit var imageUri: Uri
-
-
+  private var type = true
+  private var file: File? = null
   override fun initView() {
     initData()
     clickBackBtn()
@@ -37,9 +36,13 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
 
   private fun initData() {
     val imageUriString = args.imagePath
+    type = args.type
+    if (type) {
+      file = uploadPhotoViewModel.imageFile.value
+    }
     Timber.d("이미지 데이터확인 $imageUriString")
     imageUri = Uri.parse(imageUriString)
-    binding.imgPost.setImageURI(imageUri)
+    binding.photoUrl = imageUri.toString()
   }
 
   //업로드 클릭
@@ -57,8 +60,10 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
               imageUri,
               content.toString(),
               latitude,
-              longitude
-            )
+              longitude,
+              file
+            ),
+            type
           )
           observeUploadSuccess()
         } else {

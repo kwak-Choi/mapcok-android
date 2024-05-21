@@ -17,6 +17,7 @@ import hustle.com.util.server.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,26 +96,34 @@ class UploadPhotoViewModel @Inject constructor(
 
 
 
-    fun registerPost(postParam: PostParam) {
+    fun registerPost(postParam: PostParam, type : Boolean) {
         viewModelScope.launch {
             Timber.d("확인 파람 $postParam")
             when (val response = safeApiCall(Dispatchers.IO) {
-                postDataSource.registerPost(postParam)
+                postDataSource.registerPost(postParam, type)
             }) {
                 is ResultWrapper.Success -> {
                     setRegisterPostSuccess(response.data.data.success)
-                    Timber.d("사진 추가 성공")
+                    Timber.d("게시글 추가 성공")
                 }
 
                 is ResultWrapper.GenericError -> {
-                    Timber.d("사진 추가 에러 ${response.message}")
+                    Timber.d("게시글 추가 에러 ${response.message}")
                 }
 
                 is ResultWrapper.NetworkError -> {
-                    Timber.d("사진 추가 네트워크 에러")
+                    Timber.d("게시글 추가 네트워크 에러")
                 }
             }
         }
+    }
+
+    //촬영된 이미지 파일
+    private val _imageFile = MutableLiveData<File>()
+    val imageFile : LiveData<File> get() = _imageFile
+
+    fun setImageFile(value : File){
+        _imageFile.value = value
     }
 
 }

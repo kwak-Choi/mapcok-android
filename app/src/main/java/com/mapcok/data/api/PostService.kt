@@ -33,11 +33,11 @@ interface PostService {
     @Multipart
     @POST("post/{userId}")
     suspend fun registerPost(
-        @Path("userId") userId: Int,
-        @Part image : MultipartBody.Part,
-        @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double,
-        @Query ("content") content : String
+      @Path("userId") userId: Int,
+      @Part image: MultipartBody.Part?,
+      @Query("latitude") latitude: Double,
+      @Query("longitude") longitude: Double,
+      @Query ("content") content: String
     ): ResponseData<SuccessData>
 
     @DELETE("user/photo")

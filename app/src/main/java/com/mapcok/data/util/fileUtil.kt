@@ -5,10 +5,14 @@ import android.net.Uri
 import android.provider.MediaStore
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okio.BufferedSink
 import okio.source
+import java.io.File
+
 
 fun Uri.toMultipartBodyBasic(context: Context, parameter: String): MultipartBody.Part {
 
@@ -45,6 +49,18 @@ fun Uri.toMultipartBodyBasic(context: Context, parameter: String): MultipartBody
 
   }
 
+
+  return MultipartBody.Part.createFormData(parameter, fileName, requestBody)
+}
+
+
+fun File.toMultipartBodyBasic(parameter: String): MultipartBody.Part {
+
+
+  var fileName: String = System.currentTimeMillis().toString()
+
+
+  val requestBody = this.asRequestBody("image/jpeg".toMediaTypeOrNull())
 
   return MultipartBody.Part.createFormData(parameter, fileName, requestBody)
 }
