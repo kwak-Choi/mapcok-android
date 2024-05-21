@@ -48,6 +48,7 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
   //업로드 클릭
   private fun clickSaveBtn() {
     binding.saveBtn.setOnClickListener {
+      Timber.d("게시글 업로드 클릭")
       val userId = SingletonUtil.user?.id
 
       uploadPhotoViewModel.location.value?.let { location ->

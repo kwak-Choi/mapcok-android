@@ -1,7 +1,5 @@
 package com.mapcok.ui.photo.viewmodel
 
-import android.view.animation.Transformation
-import androidx.constraintlayout.widget.ConstraintSet.Transform
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.mapcok.data.datasource.remote.PostDataSource
 import com.mapcok.data.model.PostData
 import com.mapcok.data.model.param.PostParam
-import com.mapcok.ui.util.SingletonUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hustle.com.util.server.ResultWrapper
 import hustle.com.util.server.safeApiCall
@@ -124,6 +121,14 @@ class UploadPhotoViewModel @Inject constructor(
 
     fun setImageFile(value : File){
         _imageFile.value = value
+    }
+
+    //마커 클릭이벤트
+    private val _markerClick = MutableLiveData<Boolean>()
+    val markerClick : LiveData<Boolean> get() = _markerClick
+
+    fun setMarkerClick(value : Boolean){
+        _markerClick.value = value
     }
 
 }
