@@ -30,8 +30,8 @@ class UploadPhotoViewModel @Inject constructor(
         _location.value = Pair(lat, lon)
     }
 
-    private val _postList = MutableLiveData<List<PostData>>()
-    val postList: LiveData<List<PostData>> get() = _postList
+    private val _postList = MutableLiveData<List<PostData>?>()
+    val postList: LiveData<List<PostData>?> get() = _postList
 
     fun getUserPosts(userId: Int) {
         viewModelScope.launch {
@@ -39,9 +39,10 @@ class UploadPhotoViewModel @Inject constructor(
                 postDataSource.getUserPosts(userId)
             }) {
                 is ResultWrapper.Success -> {
-                    _postList.value = response.data.data
+                    _postList.value = response.data.data?.let {
+                        if (it != _postList.value) it else _postList.value
+                    }
                     Timber.d("게시물 목록 불러오기 성공")
-                    Timber.d("${response.data.data}")
                 }
                 is ResultWrapper.GenericError -> {
                     Timber.d("게시물 목록 불러오기 에러 ${response.message}")
@@ -53,8 +54,9 @@ class UploadPhotoViewModel @Inject constructor(
         }
     }
 
-    private val _selectedPost = MutableLiveData<PostData>()
-    val selectedPost: LiveData<PostData> get() = _selectedPost
+
+    private val _selectedPost = MutableLiveData<PostData?>()
+    val selectedPost: MutableLiveData<PostData?> get() = _selectedPost
 
     fun getPhotoById(userId: Int, photoId: Int) {
         viewModelScope.launch {

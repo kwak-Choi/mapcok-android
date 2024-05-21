@@ -18,7 +18,7 @@ class PostDataSourceImpl @Inject constructor(
 ) : PostDataSource {
 
     override suspend fun registerPost(postParam: PostParam): ResponseData<SuccessData> {
-        val imageValue = postParam.imageFile.toMultipartBodyBasic(context, "image")
+        val imageValue = postParam.photoUrl.toMultipartBodyBasic(context, "image")
         Timber.d("데이터 확인  ${postParam.userId} $imageValue ${postParam.latitude} ${postParam.longitude} ${postParam.content} ")
         return postService.registerPost(
             userId = postParam.userId,

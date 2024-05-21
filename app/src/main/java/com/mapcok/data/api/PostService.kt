@@ -22,6 +22,7 @@ interface PostService {
     ): ResponseData<PostData>
 
 
+
     @GET("post")
     suspend fun getUserPosts(
         @Query("userId") userId: Int

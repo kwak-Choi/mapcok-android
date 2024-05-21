@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.distinctUntilChanged
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -52,6 +53,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.math.log
 import kotlin.properties.Delegates
 
 private const val TAG = "MapFragment_싸피"
@@ -88,15 +90,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
             getPicture()
         }
 
-
-        Log.d(TAG, "onViewCreated: ${SingletonUtil.user?.id}")
         uploadPhotoViewModel.selectedPost.observe(viewLifecycleOwner, Observer { postData ->
-            Log.d(TAG, "onViewCreated: ${postData}")
-            if (postData != null) {
-                Log.d(TAG, "onViewCreated: 날 보여주고싶어")
-                Toast.makeText(context, postData.content, Toast.LENGTH_LONG).show()
+            postData?.let {
+                Toast.makeText(context, it.content, Toast.LENGTH_LONG).show()
             }
         })
+
 
     }
 
@@ -247,16 +246,19 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     override fun onStart() {
         super.onStart()
+        Log.d(TAG, "onStart: ")
         mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume: ")
         mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
+        Log.d(TAG, "onPause: ")
         mapView.onPause()
     }
 
@@ -267,11 +269,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
     override fun onStop() {
         super.onStop()
+        Log.d(TAG, "onStop: ")
         mapView.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView: ")
         mapView.onDestroy()
     }
 
@@ -281,6 +285,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     }
 
     override fun onMapReady(naverMap: NaverMap) {
+        Log.d(TAG, "onMapReady: ")
         this.naverMap = naverMap
         // 현재 위치
         naverMap.locationSource = locationSource
@@ -294,21 +299,26 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
 
         naverMap.extent = LatLngBounds(LatLng(33.0041, 124.6094), LatLng(38.6140, 131.5928))
 
-        uploadPhotoViewModel.postList.observe(viewLifecycleOwner, Observer { postList ->
-            setMarkers(postList)
+        SingletonUtil.user?.let {
+            uploadPhotoViewModel.getUserPosts(it.id)
+        }
+
+        uploadPhotoViewModel.postList.distinctUntilChanged().observe(viewLifecycleOwner, Observer { postList ->
+            postList?.let {
+                setMarkers(it)
+            }
         })
-        SingletonUtil.user?.let { uploadPhotoViewModel.getUserPosts(it.id) }
     }
 
-    @SuppressLint("LogNotTimber")
     private fun setMarkers(postList: List<PostData>) {
-        Log.d(TAG, "setMarkers: 호출댐??")
+        Log.d(TAG, "setMarkers: ")
+        Log.d(TAG, "setMarkers called with ${postList.size} posts")
         postList.forEachIndexed { index, post ->
             Log.d(TAG, "Post $index: $post")
         }
-        
+
         val keyTagMap = postList.associate { post ->
-            PhotoItem(post.photoId, LatLng(post.latitude, post.longitude)) to null
+            PhotoItem(post.id, LatLng(post.latitude, post.longitude)) to null
         }
         Log.d(TAG, "마커 개수: ${keyTagMap.size}")
 
@@ -333,28 +343,21 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                     if (it is Marker) {
                         val photoItem = keyTagMap.keys.find { item -> item.position == it.position }
                         val id = photoItem?.id
-                        Log.d(TAG, "Clicked Marker ID: $id")
-
                         if (photoItem != null) {
-                            Log.d(TAG, "updateLeafMarker: ???")
-                            SingletonUtil.user?.let { it1 -> uploadPhotoViewModel.getPhotoById(it1.id, photoItem.id) }
-                            Log.d(TAG, "updateLeafMarker: ??? ${photoItem.id}")
+                            SingletonUtil.user?.let { user ->
+                                uploadPhotoViewModel.getPhotoById(user.id, photoItem.id)
+                            }
                         }
-
                         val clickedLatLng = it.position
-                        Log.d(TAG, "Clicked Marker LatLng: $clickedLatLng")
-
-                        val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng, 18.0)
-                            .animate(CameraAnimation.Easing)
+                        val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng, 18.0).animate(CameraAnimation.Easing)
                         naverMap.moveCamera(cameraUpdate)
-
                     }
                     true
                 }
             }
         })
 
-        val clusterer = builder.build()
+        val clusterer: Clusterer<PhotoItem> = builder.build()
         clusterer.addAll(keyTagMap)
         clusterer.map = naverMap
     }
