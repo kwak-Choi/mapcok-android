@@ -50,7 +50,7 @@ class MyPostFragment : BaseFragment<FragmentMyPhotoBinding>(R.layout.fragment_my
 
   fun setupDeleteOption(){
     SingletonUtil.user?.let { myPostViewModel.deletePhoto(it.id,binding.postData!!.id) }
-    findNavController().navigate(R.id.action_myPhotoFragment_to_myPageFragment)
+    findNavController().navigateUp()
   }
 
   private fun createOption() {
