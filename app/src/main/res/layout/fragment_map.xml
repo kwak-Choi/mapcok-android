@@ -19,6 +19,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_preview"
+        android:layout_width="300dp"
+        android:layout_height="540dp"
+        android:background="@drawable/round_privew"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+      <!--      android:visibility="@{dialogVisibility == true ? View.VISIBLE : View.GONE, default=gone}"-->
+
+
+      <ImageView
+          android:id="@+id/img_preview"
+          setImage="@{postData.photoUrl}"
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          android:layout_marginTop="48dp"
+          android:padding="15dp"
+          android:scaleType="centerCrop"
+          android:src="@drawable/kokage"
+          app:layout_constraintDimensionRatio="3:4"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+      <TextView
+          android:id="@+id/tv_preview"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="50dp"
+          android:layout_marginBottom="40dp"
+          android:text="@{postData.content}"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/img_preview" />
+
+      <ImageView
+          android:id="@+id/img_cancel_preview"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:layout_marginStart="15dp"
+          android:layout_marginTop="15dp"
+          android:backgroundTint="@null"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/cancel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.naver.maps.map.MapView
       android:id="@+id/map_view"
@@ -82,53 +131,7 @@
       app:tint="@null" />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-      android:id="@+id/layout_preview"
-      android:layout_width="300dp"
-      android:layout_height="540dp"
-      android:background="@drawable/round_privew"
-      android:visibility="@{dialogVisibility == true ? View.VISIBLE : View.GONE, default=gone}"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
 
-      <ImageView
-        android:id="@+id/img_preview"
-        setImage="@{postData.photoUrl}"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="48dp"
-        android:padding="15dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/kokage"
-        app:layout_constraintDimensionRatio="3:4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-      <TextView
-        android:id="@+id/tv_preview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="40dp"
-        android:text="@{postData.content}"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_preview" />
-
-      <ImageView
-        android:id="@+id/img_cancel_preview"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:backgroundTint="@null"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cancel" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

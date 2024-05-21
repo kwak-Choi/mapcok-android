@@ -144,7 +144,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
 
     binding.imgCancelPreview.setOnClickListener {
       animateView(binding.layoutPreview, 0f, -binding.layoutPreview.width.toFloat())
-      binding.dialogVisibility = false
+//      binding.dialogVisibility = false
     }
   }
 
@@ -253,8 +253,9 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
   private fun observeSelectMarker() { //마커 클릭시 이미지랑 content
     uploadPhotoViewModel.selectedPost.observe(viewLifecycleOwner) {
       if(uploadPhotoViewModel.markerClick.value == true){
-        binding.dialogVisibility = true
+        binding.layoutPreview.bringToFront()
         animateView(binding.layoutPreview, -binding.layoutPreview.width.toFloat(), 0f)
+        binding.dialogVisibility = true
         binding.postData = it
         uploadPhotoViewModel.setMarkerClick(false)
       }
@@ -275,11 +276,14 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
   private fun setMarkers() {
     uploadPhotoViewModel.postList.observe(viewLifecycleOwner) {
 
-        Timber.d("마커 데이터 확인 $it")
+//        Timber.d("마커 데이터 확인 $it")
+
 
       val keyTagMap = it.associate { post ->
         PhotoItem(post.id, LatLng(post.latitude, post.longitude)) to null
       }
+
+      Timber.d("마커 개수는 ${keyTagMap.size}")
 
       builder.minZoom(4).maxZoom(16)
 

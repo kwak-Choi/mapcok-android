@@ -44,4 +44,10 @@ class PostDataSourceImpl @Inject constructor(
     override suspend fun getUserPosts(userId: Int): ResponseData<List<PostData>> {
         return postService.getUserPosts(userId)
     }
+
+    override suspend fun updatePost(photoId: Int, post: PostData): ResponseData<PostData> {
+        return postService.updatePost(photoId, post)
+    }
+
+
 }

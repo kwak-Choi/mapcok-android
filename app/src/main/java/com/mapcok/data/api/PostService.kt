@@ -4,10 +4,12 @@ import com.mapcok.data.model.ResponseData
 import com.mapcok.data.model.PostData
 import com.mapcok.data.model.SuccessData
 import okhttp3.MultipartBody
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -40,9 +42,16 @@ interface PostService {
       @Query ("content") content: String
     ): ResponseData<SuccessData>
 
-    @DELETE("user/photo")
+    @DELETE("post/{userId}/{photoId}")
     suspend fun deletePhoto(
-        @Query("userId") userId: Int,
-        @Query("photoId") photoId: Int
+        @Path("userId") userId: Int,
+        @Path("photoId") photoId: Int
     ): ResponseData<Unit>
+
+    @PUT("post/{photoId}")
+    suspend fun updatePost(
+        @Path("photoId") photoId: Int,
+        @Body post: PostData
+    ): ResponseData<PostData>
+
 }

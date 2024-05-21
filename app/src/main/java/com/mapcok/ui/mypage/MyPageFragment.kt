@@ -28,8 +28,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
   private fun initData() {
     binding.userData = SingletonUtil.user
-
-
     myPageViewModel.getPosts(SingletonUtil.user?.id ?: 0)
 
   }
