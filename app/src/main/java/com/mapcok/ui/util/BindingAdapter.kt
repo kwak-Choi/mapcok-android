@@ -11,15 +11,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@BindingAdapter("imageDrawable")
-fun bindImageFromRes(view: ImageView, src: String?) {
-  val packageName = view.context.packageName
-  src?.let {
-    val redId = view.resources.getIdentifier(it, "drawable", packageName)
-    view.setImageResource(redId)
-
-  }
-}
 
 @BindingAdapter("setSimpleTime")
 fun setHour(textView: TextView, date: Long) {
@@ -44,6 +35,15 @@ fun setImage(imageView: ImageView, src: String?) {
   src?.let {
     val url = "${SingletonUtil.baseUrl}attach/images/image" + src
     Glide.with(imageView).load(url)
+      .placeholder(R.drawable.camera_1)
+      .into(imageView)
+  }
+}
+
+@BindingAdapter("setSimpleImage")
+fun setSimpleImage(imageView: ImageView, src: String?) {
+  src?.let {
+    Glide.with(imageView).load(src)
       .placeholder(R.drawable.camera_1)
       .into(imageView)
   }

@@ -8,7 +8,7 @@ import com.mapcok.data.model.param.PostParam
 
 interface PostDataSource {
 
-    suspend fun registerPost(postParam: PostParam): ResponseData<SuccessData>
+    suspend fun registerPost(postParam: PostParam, type : Boolean): ResponseData<SuccessData>
 
     suspend fun deletePhoto(userId: Int, photoId: Int): ResponseData<Unit>
 
