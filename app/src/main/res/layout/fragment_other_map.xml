@@ -109,10 +109,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginBottom="17dp"
+            android:layout_marginBottom="15dp"
             android:fontFamily="@font/pretendard_semibold"
             android:text="안녕하세요!"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintStart_toEndOf="@+id/btn_back_userlist" />
     </androidx.constraintlayout.widget.ConstraintLayout>
