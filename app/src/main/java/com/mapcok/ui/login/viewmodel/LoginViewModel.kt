@@ -42,10 +42,12 @@ class LoginViewModel @Inject constructor(
         }
 
         is ResultWrapper.GenericError -> {
+          setUserSignUpSuccess(false)
           Timber.d("회원 가입 에러 ${response.message}")
         }
 
         is ResultWrapper.NetworkError -> {
+          setUserSignUpSuccess(false)
           Timber.d("회원 가입 네트워크 에러")
         }
       }

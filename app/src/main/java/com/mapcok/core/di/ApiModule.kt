@@ -1,7 +1,8 @@
 package com.mapcok.core.di
 
-import com.mapcok.data.api.UserService
+import com.mapcok.data.api.GptService
 import com.mapcok.data.api.PostService
+import com.mapcok.data.api.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,12 +17,19 @@ object ApiModule {
   @Singleton
   @Provides
   fun provideUserService(
-    retrofit: Retrofit
+    @NetworkModule.BaseRetrofit retrofit: Retrofit
   ): UserService = retrofit.create(UserService::class.java)
 
   @Singleton
   @Provides
   fun providePostService(
-    retrofit: Retrofit
+    @NetworkModule.BaseRetrofit retrofit: Retrofit
   ): PostService = retrofit.create(PostService::class.java)
+
+  @Singleton
+  @Provides
+  fun provideGptService(
+    @NetworkModule.GptRetrofit retrofit : Retrofit
+  ) : GptService = retrofit.create(GptService::class.java)
+
 }

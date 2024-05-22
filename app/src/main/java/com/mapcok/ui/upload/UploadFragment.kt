@@ -4,6 +4,7 @@ import android.net.Uri
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -79,7 +80,7 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
   //뒤로가기
   private fun clickBackBtn() {
     binding.backMap.setOnClickListener {
-      findNavController().navigate(R.id.action_uploadFragment_to_mapFragment)
+      it.findNavController().popBackStack()
     }
 
   }

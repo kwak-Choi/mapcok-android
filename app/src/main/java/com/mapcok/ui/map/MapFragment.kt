@@ -5,7 +5,6 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -14,6 +13,7 @@ import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -47,9 +47,7 @@ import timber.log.Timber
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.properties.Delegates
 
-private const val TAG = "MapFragment_싸피"
 
 @AndroidEntryPoint
 class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
@@ -143,7 +141,11 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
 
     binding.imgCancelPreview.setOnClickListener {
       animateView(binding.layoutPreview, 0f, -binding.layoutPreview.width.toFloat())
-//      binding.dialogVisibility = false
+      binding.dialogVisibility = false
+    }
+
+    binding.imgGptSearch.setOnClickListener {
+      it.findNavController().navigate(R.id.action_mapFragment_to_gptFragment)
     }
   }
 
@@ -251,7 +253,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
 
   private fun observeSelectMarker() { //마커 클릭시 이미지랑 content
     uploadPhotoViewModel.selectedPost.observe(viewLifecycleOwner) {
-      if(uploadPhotoViewModel.markerClick.value == true){
+      if (uploadPhotoViewModel.markerClick.value == true) {
         binding.layoutPreview.bringToFront()
         animateView(binding.layoutPreview, -binding.layoutPreview.width.toFloat(), 0f)
         binding.dialogVisibility = true
@@ -274,10 +276,6 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
 
   private fun setMarkers() {
     uploadPhotoViewModel.postList.observe(viewLifecycleOwner) {
-
-//        Timber.d("마커 데이터 확인 $it")
-
-
       val keyTagMap = it.associate { post ->
         PhotoItem(post.id, LatLng(post.latitude, post.longitude)) to null
       }
