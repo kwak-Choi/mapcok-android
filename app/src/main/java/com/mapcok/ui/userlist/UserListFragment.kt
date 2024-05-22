@@ -19,7 +19,6 @@ private const val TAG = "UserListFragment_싸피"
 class UserListFragment : BaseFragment<FragmentUserListBinding>(R.layout.fragment_user_list) {
 
     private val userListViewModel : UserListViewModel by viewModels()
-    private val uploadPhotoViewModel : UploadPhotoViewModel by viewModels()
 
     private lateinit var userListAdapter: UserListAdapter
     override fun initView() {
@@ -30,27 +29,9 @@ class UserListFragment : BaseFragment<FragmentUserListBinding>(R.layout.fragment
     private fun observeData() {
         userListViewModel.getUserList()
         userListViewModel.userList.observe(viewLifecycleOwner) { userList ->
-            userList.forEach { user ->
-                uploadPhotoViewModel.getUserPosts(user.id)
-                uploadPhotoViewModel.postListSize.observe(viewLifecycleOwner){ postCount ->
-                    user.copy(userPostCount = postCount)
-                }
-            }
             userListAdapter.submitList(userList)
         }
 
-//        uploadPhotoViewModel.postListSize.observe(viewLifecycleOwner) { postCount ->
-//            val currentUserId = uploadPhotoViewModel.currentUserId
-//            Log.d(TAG, "observeData: $currentUserId")
-//            val updatedList = userListAdapter.currentList.map { user ->
-//                if (user.id == currentUserId) {
-//                    user.copy(userPostCnt = postCount)
-//                } else {
-//                    user
-//                }
-//            }
-//            userListAdapter.submitList(updatedList)
-//        }
     }
 
 
