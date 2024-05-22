@@ -2,6 +2,7 @@ package com.mapcok.ui.gpt
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.mapcok.R
 import com.mapcok.databinding.FragmentGptBinding
 import com.mapcok.ui.base.BaseBottomSheetFragment
@@ -20,12 +21,13 @@ class GptFragment : BaseBottomSheetFragment<FragmentGptBinding>(R.layout.fragmen
 
   private lateinit var gptAdapter: GptAdapter
 
-
-
   override fun initViewCreated() {
     initAdapter()
     sendMessage()
     observeMessage()
+    binding.btnGptCancel.setOnClickListener {
+      findNavController().navigateUp()
+    }
   }
 
 
