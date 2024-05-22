@@ -67,7 +67,6 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
 
   override fun initOnCreateView() {
     initMapView()
-
   }
 
   override fun initOnMapReady(naverMap: NaverMap) {

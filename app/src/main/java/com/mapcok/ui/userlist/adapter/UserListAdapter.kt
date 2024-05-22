@@ -9,13 +9,13 @@ import com.mapcok.data.model.UserData
 import com.mapcok.databinding.UserListItemBinding
 import com.mapcok.ui.util.DiffUtilCallback
 
-class UserListAdapter : ListAdapter<UserData, UserListAdapter.UserListViewHolder>(
+class UserListAdapter(private val onOtherBtnClick: (Int) -> Unit) : ListAdapter<UserData, UserListAdapter.UserListViewHolder>(
     DiffUtilCallback<UserData>()
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder {
         val binding =
             UserListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return UserListViewHolder(binding)
+        return UserListViewHolder(binding, onOtherBtnClick)
     }
 
     override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
@@ -23,12 +23,18 @@ class UserListAdapter : ListAdapter<UserData, UserListAdapter.UserListViewHolder
     }
 
     class UserListViewHolder(
-        val binding: UserListItemBinding
+        val binding: UserListItemBinding,
+        private val onOtherBtnClick : (Int) -> Unit
     ) : ViewHolder(binding.root) {
 
         fun bind(userData: UserData) {
             binding.apply {
-                this.userData = userData
+                val localUserData = userData
+                this.userData = localUserData
+
+                binding.btnOtherMap.setOnClickListener {
+                    onOtherBtnClick(localUserData.id)
+                }
             }
         }
     }

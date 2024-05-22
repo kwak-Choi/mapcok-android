@@ -9,28 +9,33 @@
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.mapcok.ui.map.MapFragment"
-        tools:layout="@layout/fragment_map" >
+        tools:layout="@layout/fragment_map">
 
         <action
             android:id="@+id/action_mapFragment_to_upLoadFragment"
             app:destination="@id/uploadFragment" />
         <argument
             android:name="imagePath"
-            app:argType="string"
-            />
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.mapcok.ui.userlist.UserListFragment"
-        tools:layout="@layout/fragment_user_list" >
+        tools:layout="@layout/fragment_user_list">
 
+        <action
+            android:id="@+id/action_userListFragment_to_otherMapFragment"
+            app:destination="@id/otherMapFragment" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
     </fragment>
 
     <fragment
         android:id="@+id/myPageFragment"
         android:name="com.mapcok.ui.mypage.MyPageFragment"
-        tools:layout="@layout/fragment_my_page" >
+        tools:layout="@layout/fragment_my_page">
 
         <action
             android:id="@+id/action_myPageFragment_to_myPostFragment"
@@ -47,29 +52,37 @@
             app:destination="@id/mapFragment" />
         <argument
             android:name="imagePath"
-            app:argType="string"
-            />
+            app:argType="string" />
         <argument
             android:name="type"
-            app:argType="boolean"
-            android:defaultValue="true"/>
+            android:defaultValue="true"
+            app:argType="boolean" />
     </fragment>
 
-   <fragment
-       android:id="@+id/myPostFragment"
-       android:name="com.mapcok.ui.mypost.MyPostFragment"
-       tools:layout="@layout/fragment_my_photo">
-       <action
-           android:id="@+id/action_myPhotoFragment_to_myPageFragment"
-           app:destination="@id/myPageFragment" />
-       <argument
-         android:name="postData"
-         app:nullable="true"
-         android:defaultValue="@null"
-         app:argType="com.mapcok.data.model.PostData" />
+    <fragment
+        android:id="@+id/myPostFragment"
+        android:name="com.mapcok.ui.mypost.MyPostFragment"
+        tools:layout="@layout/fragment_my_photo">
+        <action
+            android:id="@+id/action_myPhotoFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+        <argument
+            android:name="postData"
+            android:defaultValue="@null"
+            app:argType="com.mapcok.data.model.PostData"
+            app:nullable="true" />
 
-   </fragment>
+    </fragment>
 
+    <fragment
+        android:id="@+id/otherMapFragment"
+        android:name="com.mapcok.ui.map.other.OtherMapFragment"
+        tools:layout="@layout/fragment_other_map">
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+
+    </fragment>
 
 
 </navigation>
