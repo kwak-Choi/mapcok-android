@@ -176,6 +176,6 @@ dependencies {
     //circleImage
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
-
+    implementation("com.airbnb.android:lottie:5.2.0")
 
 }

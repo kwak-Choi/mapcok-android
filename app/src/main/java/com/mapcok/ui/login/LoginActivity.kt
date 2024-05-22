@@ -1,6 +1,7 @@
 package com.mapcok.ui.login
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -49,7 +50,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                     idTokenTask.result?.token?.let { token ->
                       Timber.d("이메일 ${task.result.user?.email.toString()}")
                       Timber.d("이름 ${task.result.user?.displayName.toString()}")
+                      Timber.d("사진 ${task.result.user?.photoUrl}")
                       idToken = token
+                      binding.loadingVisible = true
                       loginViewModel.signUp(
                         UserParam(
                           userEmail = task.result.user?.email.toString(),
@@ -103,12 +106,16 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
     loginViewModel.userSignUpSuccess.observe(this) {
       if (it) {
         initGoActivity(this, MainActivity::class.java)
+      }else{
+        Toast.makeText(this, "잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
       }
+      binding.loadingVisible = false
     }
   }
 
   private fun clickGoogleLoginBtn() {
     binding.imgGoogleLogin.setOnClickListener {
+
       oneTapClient
         .beginSignIn(signInRequest)
         .addOnSuccessListener(this) { result ->

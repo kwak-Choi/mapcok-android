@@ -4,7 +4,11 @@
   xmlns:tools="http://schemas.android.com/tools">
 
   <data>
+    <import type="android.view.View"/>
 
+    <variable
+      name="loadingVisible"
+      type="boolean" />
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +35,20 @@
       app:layout_constraintStart_toStartOf="parent"
       android:layout_marginBottom="80dp"
       android:src="@drawable/ic_google_login" />
+
+    <com.airbnb.lottie.LottieAnimationView
+      android:id="@+id/img_progress"
+      android:layout_width="100dp"
+      android:layout_height="100dp"
+      app:layout_constraintDimensionRatio="21:5"
+      app:lottie_rawRes="@raw/home_loading"
+      app:lottie_autoPlay="true"
+      app:lottie_loop="true"
+      android:layout_marginTop="310dp"
+      android:visibility="@{loadingVisible == true ? View.VISIBLE : View.GONE , default = gone}"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
