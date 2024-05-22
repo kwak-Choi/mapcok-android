@@ -1,11 +1,15 @@
 package com.mapcok.ui.map.other
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -14,6 +18,7 @@ import com.google.firebase.annotations.concurrent.UiThread
 import com.mapcok.R
 import com.mapcok.databinding.FragmentOtherMapBinding
 import com.mapcok.ui.base.BaseFragment
+import com.mapcok.ui.base.BaseMapFragment
 import com.mapcok.ui.map.MapFragment
 import com.mapcok.ui.map.PhotoItem
 import com.mapcok.ui.photo.viewmodel.UploadPhotoViewModel
@@ -22,6 +27,7 @@ import com.mapcok.ui.util.SingletonUtil
 import com.mapcok.ui.util.checkLocationPermission
 import com.mapcok.ui.util.requestMapPermission
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
@@ -41,84 +47,111 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import kotlin.properties.Delegates
 
+private const val TAG = "OtherMapFragment_싸피"
 @AndroidEntryPoint
-class OtherMapFragment : BaseFragment<FragmentOtherMapBinding>(R.layout.fragment_other_map),OnMapReadyCallback {
+class OtherMapFragment() : BaseMapFragment<FragmentOtherMapBinding>(R.layout.fragment_other_map),OnMapReadyCallback {
 
     private val uploadPhotoViewModel: UploadPhotoViewModel by activityViewModels()
     private val args: OtherMapFragmentArgs by navArgs()
     private lateinit var naverMap: NaverMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationSource: FusedLocationSource
-    private lateinit var mapView: MapView
+    private lateinit var otherMapView: MapView
+    override var mapView: MapView? = null
     private val builder = Clusterer.Builder<PhotoItem>()
-    override fun initView() {
-        hideBottomNavigation()
+    override fun initOnCreateView() {
         initMapView()
+    }
+    override fun initViewCreated() {
+        hideBottomNavigation()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        clickEventListener()
+        binding.dialogVisibility = false
     }
 
     private fun initMapView() {
-        mapView = binding.mapOther
-        mapView?.getMapAsync(this)
+        otherMapView = binding.mapOther
+        otherMapView?.getMapAsync(this)
+        locationSource = FusedLocationSource(this, OtherMapFragment.LOCATION_PERMISSION_REQUEST_CODE)
+        binding.tvOtherName.text = args.userName + " 님의 맵 콕!"
     }
 
     override fun onStart() {
         super.onStart()
-        mapView?.onStart()
+        otherMapView?.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView?.onResume()
+        otherMapView?.onResume()
+    }
+
+    override fun initOnResume() {
+
     }
 
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView?.onSaveInstanceState(outState)
+        otherMapView?.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
-        mapView?.onStop()
+        otherMapView?.onStop()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView?.onLowMemory()
+        otherMapView?.onLowMemory()
     }
 
 
     override fun onPause() {
         super.onPause()
-        showBottomNavigation()
-        mapView?.onPause()
+        otherMapView?.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        showBottomNavigation()
-        mapView?.onDestroy()
+        showBottomNavigation2()
+        otherMapView?.onDestroy()
     }
 
     private fun hideBottomNavigation() {
+        Log.d(TAG, "hideBottomNavigation: 나옴??")
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_main)?.visibility =
             View.GONE
     }
 
-    private fun showBottomNavigation() {
+    private fun showBottomNavigation1() {
+        Log.d(TAG, "showBottomNavigation: 나옴????쇼쇼111")
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_main)?.visibility =
+            View.VISIBLE
+    }
+    private fun showBottomNavigation2() {
+        Log.d(TAG, "showBottomNavigation: 나옴????쇼쇼222")
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_main)?.visibility =
             View.VISIBLE
     }
 
-    companion object {
-
-    }
 
     @UiThread
-    override fun onMapReady(naverMap: NaverMap) {
+    override fun initOnMapReady(naverMap: NaverMap) {
        initNaverMap(naverMap)
         setMarkers()
+        observeSelectMarker()
+    }
+
+    private fun clickEventListener() {
+        binding.imgOtherCancelPreview.setOnClickListener {
+            animateView(binding.layoutOtherPreview, 0f, -binding.layoutOtherPreview.width.toFloat())
+        }
+        binding.btnBackUserlist.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun setMarkers() {
@@ -170,6 +203,28 @@ class OtherMapFragment : BaseFragment<FragmentOtherMapBinding>(R.layout.fragment
         }
     }
 
+    private fun observeSelectMarker() { //마커 클릭시 이미지랑 content
+        uploadPhotoViewModel.selectedPost.observe(viewLifecycleOwner) {
+            if(uploadPhotoViewModel.markerClick.value == true){
+                binding.layoutOtherPreview.bringToFront()
+                animateView(binding.layoutOtherPreview, -binding.layoutOtherPreview.width.toFloat(), 0f)
+                binding.dialogVisibility = true
+                binding.postData = it
+                uploadPhotoViewModel.setMarkerClick(false)
+            }
+        }
+    }
+
+    private fun animateView(view: View, startTranslationX: Float, endTranslationX: Float) {
+        view.translationX = startTranslationX
+        view.isVisible = true
+        view.animate()
+            .translationX(endTranslationX)
+            .setDuration(OtherMapFragment.ANIMATION_DURATION)
+            .setListener(null)
+            .start()
+    }
+
     private fun initNaverMap(naverMap: NaverMap) { // 위치 및 naverMap 세팅
         this.naverMap = naverMap
         this.naverMap.locationSource = locationSource
@@ -179,6 +234,8 @@ class OtherMapFragment : BaseFragment<FragmentOtherMapBinding>(R.layout.fragment
         this.naverMap.locationTrackingMode = LocationTrackingMode.Follow
         this.naverMap.minZoom = 6.0
         this.naverMap.maxZoom = 18.0
+
+        naverMap.extent = LatLngBounds(LatLng(33.0041, 124.6094), LatLng(38.6140, 131.5928))
         getLastLocation(naverMap)
         uploadPhotoViewModel.getUserPosts(args.userId)
     }
@@ -199,5 +256,10 @@ class OtherMapFragment : BaseFragment<FragmentOtherMapBinding>(R.layout.fragment
                 uploadPhotoViewModel.setLocation(location.latitude, location.longitude)
             }
         }
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        private const val ANIMATION_DURATION = 300L
     }
 }

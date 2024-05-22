@@ -46,10 +46,10 @@ abstract class BaseMapFragment<T : ViewDataBinding>(private val layoutResId: Int
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated 호출됨! $mapView")
-        iniViewCreated()
+        initViewCreated()
     }
 
-    abstract fun iniViewCreated()
+    abstract fun initViewCreated()
 
 
     override fun onStart() {

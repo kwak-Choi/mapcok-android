@@ -1,5 +1,6 @@
 package com.mapcok.ui.photo.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
+import kotlin.math.log
 
+private const val TAG = "UploadPhotoViewModel_싸피"
 @HiltViewModel
 class UploadPhotoViewModel @Inject constructor(
     private val postDataSource: PostDataSource
@@ -41,6 +44,7 @@ class UploadPhotoViewModel @Inject constructor(
 
     fun getUserPosts(userId: Int) {
         currentUserId = userId
+
         viewModelScope.launch {
             when (val response = safeApiCall(Dispatchers.IO) {
                 postDataSource.getUserPosts(userId)
@@ -50,6 +54,7 @@ class UploadPhotoViewModel @Inject constructor(
                         if (it != _postList.value) it else _postList.value
                     }
                     _postListSize.value = response.data.data.size
+                    Log.d(TAG, "getUserPosts: $userId, ${_postListSize.value}")
                     Timber.d("게시물 목록 불러오기 성공")
                 }
                 is ResultWrapper.GenericError -> {
