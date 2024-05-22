@@ -20,51 +20,51 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_preview"
-        android:layout_width="300dp"
-        android:layout_height="540dp"
-        android:background="@drawable/round_privew"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-      <!--      android:visibility="@{dialogVisibility == true ? View.VISIBLE : View.GONE, default=gone}"-->
+      android:id="@+id/layout_preview"
+      android:layout_width="300dp"
+      android:layout_height="540dp"
+      android:background="@drawable/round_privew"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
 
 
       <ImageView
-          android:id="@+id/img_preview"
-          setImage="@{postData.photoUrl}"
-          android:layout_width="0dp"
-          android:layout_height="0dp"
-          android:layout_marginTop="48dp"
-          android:padding="15dp"
-          android:scaleType="centerCrop"
-          android:src="@drawable/kokage"
-          app:layout_constraintDimensionRatio="3:4"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/img_preview"
+        setImage="@{postData.photoUrl}"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        android:padding="15dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/kokage"
+        app:layout_constraintDimensionRatio="3:4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
       <TextView
-          android:id="@+id/tv_preview"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="50dp"
-          android:layout_marginBottom="40dp"
-          android:text="@{postData.content}"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/img_preview" />
+        android:id="@+id/tv_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="40dp"
+        android:text="@{postData.content}"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_preview" />
 
       <ImageView
-          android:id="@+id/img_cancel_preview"
-          android:layout_width="30dp"
-          android:layout_height="30dp"
-          android:layout_marginStart="15dp"
-          android:layout_marginTop="15dp"
-          android:backgroundTint="@null"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:srcCompat="@drawable/cancel" />
+        android:id="@+id/img_cancel_preview"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cancel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -74,13 +74,17 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent" />
 
-    <View
-      android:id="@+id/dark_overlay"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="#80000000"
-      android:visibility="gone" />
-
+    <ImageView
+      android:id="@+id/img_gpt_search"
+      android:layout_width="0dp"
+      android:layout_height="50dp"
+      android:layout_marginHorizontal="20dp"
+      android:layout_marginTop="20dp"
+      android:visibility="@{dialogVisibility == false ? View.VISIBLE : View.GONE}"
+      android:background="@drawable/rectangle_fill_white_radius_20_border_1_light_sky_blue"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
       android:id="@+id/load_camera"
@@ -129,8 +133,6 @@
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:tint="@null" />
-
-
 
 
   </androidx.constraintlayout.widget.ConstraintLayout>
