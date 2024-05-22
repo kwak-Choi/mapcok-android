@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.mapcok.ui.map.MapFragment"
-        tools:layout="@layout/fragment_map" >
+        tools:layout="@layout/fragment_map">
 
         <action
             android:id="@+id/action_mapFragment_to_upLoadFragment"
@@ -19,21 +19,29 @@
             app:destination="@+id/gptFragment"/>
         <argument
             android:name="imagePath"
-            app:argType="string"
-            />
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.mapcok.ui.userlist.UserListFragment"
-        tools:layout="@layout/fragment_user_list" >
+        tools:layout="@layout/fragment_user_list">
 
+        <action
+            android:id="@+id/action_userListFragment_to_otherMapFragment"
+            app:destination="@id/otherMapFragment" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+        <argument
+            android:name="userName"
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/myPageFragment"
         android:name="com.mapcok.ui.mypage.MyPageFragment"
-        tools:layout="@layout/fragment_my_page" >
+        tools:layout="@layout/fragment_my_page">
 
         <action
             android:id="@+id/action_myPageFragment_to_myPostFragment"
@@ -48,12 +56,24 @@
 
         <argument
             android:name="imagePath"
-            app:argType="string"
-            />
+            app:argType="string" />
         <argument
             android:name="type"
-            app:argType="boolean"
-            android:defaultValue="true"/>
+            android:defaultValue="true"
+            app:argType="boolean" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherMapFragment"
+        android:name="com.mapcok.ui.map.other.OtherMapFragment"
+        tools:layout="@layout/fragment_other_map">
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+        <argument
+            android:name="userName"
+            app:argType="string" />
+
     </fragment>
 
    <fragment
@@ -72,7 +92,6 @@
         android:id="@+id/gptFragment"
         android:name="com.mapcok.ui.gpt.GptFragment"
         tools:layout="@layout/fragment_gpt"/>
-
 
 
 </navigation>

@@ -65,7 +65,6 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
 
   override fun initOnCreateView() {
     initMapView()
-
   }
 
   override fun initOnMapReady(naverMap: NaverMap) {
@@ -74,7 +73,7 @@ class MapFragment : BaseMapFragment<FragmentMapBinding>(R.layout.fragment_map), 
     observeSelectMarker()
   }
 
-  override fun iniViewCreated() {
+  override fun initViewCreated() {
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
     clickEventListener()
     binding.dialogVisibility = false
