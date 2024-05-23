@@ -20,6 +20,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
   private val myPageViewModel: MyPageViewModel by viewModels()
   private lateinit var myPageAdapter: MyPageAdapter
 
+
+  override fun onResume() {
+    super.onResume()
+    initData()
+  }
   override fun initView() {
     initData()
     initAdapter()
