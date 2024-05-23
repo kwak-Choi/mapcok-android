@@ -33,12 +33,12 @@ class SplashViewModel @Inject constructor(
         userDataSource.getUserInfo(userEmail)
       }){
         is ResultWrapper.Success ->{
+          Timber.d("로그인 파람 ${userEmail}")
           val value = response.data.data
-
+          Timber.d("로그인 성공 ${response.data.data}")
           if(value != null){
             SingletonUtil.user = response.data.data
             setLoginSuccess(true)
-            Timber.d("로그인 성공 ${response.data.data}")
           }else{
             setLoginSuccess(false)
           }

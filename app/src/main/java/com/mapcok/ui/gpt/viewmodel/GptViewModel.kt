@@ -6,6 +6,7 @@ import com.mapcok.data.datasource.remote.GptDataSource
 import com.mapcok.data.model.param.GptParam
 import com.mapcok.ui.gpt.GptMessageItem
 import com.mapcok.ui.gpt.toGptMessageItem
+import com.mapcok.ui.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hustle.com.util.custom.ListLiveData
 import hustle.com.util.server.ResultWrapper
@@ -23,6 +24,8 @@ class GptViewModel @Inject constructor(
 
   val gptData = ListLiveData<GptMessageItem>()
 
+
+  val gptDataSuccess = SingleLiveEvent<Boolean>()
 
   fun sendChat(answer: String) {
     viewModelScope.launch {
@@ -48,6 +51,7 @@ class GptViewModel @Inject constructor(
           gptData.addAll(response.data.choices.map {
             it.toGptMessageItem()
           })
+          gptDataSuccess.value = true
           Timber.d("gpt 전송 성공! ${response.data}")
         }
 
@@ -59,11 +63,8 @@ class GptViewModel @Inject constructor(
         is ResultWrapper.NetworkError -> {
           Timber.d("gpt 네트워크 에러")
         }
-
-
       }
     }
-
   }
 
 }

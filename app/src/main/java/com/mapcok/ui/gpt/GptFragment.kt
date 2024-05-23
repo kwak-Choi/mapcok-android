@@ -28,6 +28,7 @@ class GptFragment : BaseBottomSheetFragment<FragmentGptBinding>(R.layout.fragmen
     binding.btnGptCancel.setOnClickListener {
       findNavController().navigateUp()
     }
+    observeGptDataSuccess()
   }
 
 
@@ -38,23 +39,28 @@ class GptFragment : BaseBottomSheetFragment<FragmentGptBinding>(R.layout.fragmen
 
   private fun observeMessage() {
     gptViewModel.gptData.observe(viewLifecycleOwner){
-      Timber.d("gpt 요오 ${it}")
-
       gptAdapter.submitList(it)
-      lifecycleScope.launch {
-        delay(500L)
-        binding.loadingVisible = false
-        binding.rcChatContent.scrollToPosition(0)
-      }
+
     }
+  }
+
+  private fun observeGptDataSuccess(){
+    gptViewModel.gptDataSuccess.observe(viewLifecycleOwner){
+        lifecycleScope.launch {
+          delay(500L)
+          binding.loadingVisible = false
+          binding.rcChatContent.scrollToPosition(0)
+        }
+    }
+
   }
 
   private fun sendMessage() {
     binding.imgSend.setOnClickListener {
-      binding.loadingVisible = true
-      requireActivity().hideKeyboard(binding.etChat)
       val value = binding.etChat.text.toString()
       gptViewModel.gptData.addAll(listOf(GptMessageItem("user",value )))
+      binding.loadingVisible = true
+      requireActivity().hideKeyboard(binding.etChat)
       gptViewModel.sendChat(value)
       binding.etChat.clearFocus()
       binding.etChat.text.clear()
