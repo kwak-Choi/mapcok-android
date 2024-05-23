@@ -24,6 +24,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
   override fun onResume() {
     super.onResume()
     initData()
+    initAdapter()
   }
   override fun initView() {
     initData()
