@@ -1,6 +1,7 @@
 package com.mapcok.ui.mypage
 
 
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
   private fun observePostData() {
     myPageViewModel.userPost.observe(viewLifecycleOwner) {
       binding.textPhotoCnt.text = it.size.toString()
+      if(binding.textPhotoCnt.text =="0"){
+        binding.tvFirstPost.visibility = View.VISIBLE
+      }else{
+        binding.tvFirstPost.visibility = View.GONE
+      }
       myPageAdapter.submitList(it)
     }
   }

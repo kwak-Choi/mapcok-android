@@ -42,7 +42,7 @@
             android:id="@+id/text_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="130dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="60dp"
             android:fontFamily="@font/pretendard_semibold"
             android:text="@{userData.userName}"
@@ -79,6 +79,18 @@
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="@+id/text_post"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_first_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="첫 게시물을 만들어보세요!"
+            android:textColor="#6799FF"
+            android:fontFamily="@font/pretendard_semibold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/rc_my_page_photo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rc_my_page_photo" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

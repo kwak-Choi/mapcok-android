@@ -63,7 +63,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="20dp"
-        android:text='@{userData.userPostCount == 0 ? "널입니다" : (userData.userPostCount + " 게시글")}'
+        android:text='@{userData.userPostCount == 0 ? "0 게시글" : (userData.userPostCount + " 게시글")}'
         android:textColor="#F0E9E1"
         android:fontFamily="@font/pretendard_light"
         app:layout_constraintBottom_toBottomOf="parent"
