@@ -18,13 +18,13 @@
    >
 
     <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:background="@drawable/ic_mapcok_remove"
+      android:layout_width="match_parent"
+      android:layout_height="220dp"
+      android:background="@drawable/mapcok_splash"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      android:layout_marginTop="150dp"/>
+      android:layout_marginTop="180dp"/>
 
     <ImageView
       android:id="@+id/img_google_login"

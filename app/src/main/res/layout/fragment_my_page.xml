@@ -30,20 +30,20 @@
             android:id="@+id/rc_my_page_photo"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="50dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button2"
+            app:layout_constraintTop_toBottomOf="@+id/img_profile"
             app:spanCount="3" />
 
         <TextView
             android:id="@+id/text_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="60dp"
             android:fontFamily="@font/pretendard_semibold"
             android:text="@{userData.userName}"
             android:textColor="@color/black"
@@ -55,43 +55,30 @@
             android:id="@+id/text_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="110dp"
             android:fontFamily="@font/pretendard_light"
             android:text="게시물"
             android:textColor="@color/black"
             android:textSize="15sp"
-            app:layout_constraintStart_toEndOf="@+id/img_profile"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_photo_cnt" />
 
         <TextView
             android:id="@+id/text_photo_cnt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
             android:fontFamily="@font/pretendard_bold"
-            android:textAlignment="center"
             android:text="0"
+            android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/text_post"
             app:layout_constraintEnd_toEndOf="@+id/text_post"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="@+id/text_post"
-            app:layout_constraintTop_toBottomOf="@+id/text_nickname" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="120dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="45dp"
-            android:padding="0dp"
-            android:textSize="12sp"
-            android:fontFamily="@font/pretendard_semibold"
-            android:text="프로필 편집"
-            android:background="@drawable/rounded_corner_border"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_profile" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

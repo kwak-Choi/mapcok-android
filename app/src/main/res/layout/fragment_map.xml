@@ -130,7 +130,7 @@
       android:layout_height="wrap_content"
       android:layout_marginEnd="16dp"
       android:layout_marginBottom="16dp"
-      android:backgroundTint="#D5E1FF"
+      android:backgroundTint="#D6D9FF"
       android:clickable="true"
       android:src="@drawable/insta"
       app:borderWidth="0dp"
