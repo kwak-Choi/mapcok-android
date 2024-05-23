@@ -71,7 +71,6 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/kokage"
                     app:civ_border_color="#FF7C81"
                     app:civ_border_overlay="true"
                     app:civ_border_width="2dp"

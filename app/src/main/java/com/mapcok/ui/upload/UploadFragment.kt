@@ -44,6 +44,7 @@ class UploadFragment : BaseFragment<FragmentUploadBinding>(R.layout.fragment_upl
     Timber.d("이미지 데이터확인 $imageUriString")
     imageUri = Uri.parse(imageUriString)
     binding.photoUrl = imageUri.toString()
+    binding.userData = SingletonUtil.user
   }
 
   //업로드 클릭
