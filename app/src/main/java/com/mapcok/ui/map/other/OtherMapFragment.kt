@@ -46,6 +46,7 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
+import ted.gun0912.clustering.naver.TedNaverClustering
 import timber.log.Timber
 import kotlin.properties.Delegates
 
@@ -60,7 +61,7 @@ class OtherMapFragment() : BaseMapFragment<FragmentOtherMapBinding>(R.layout.fra
     private lateinit var locationSource: FusedLocationSource
     private lateinit var otherMapView: MapView
     override var mapView: MapView? = null
-    private val builder = Clusterer.Builder<PhotoItem>()
+
     override fun initOnCreateView() {
         initMapView()
     }
@@ -155,53 +156,45 @@ class OtherMapFragment() : BaseMapFragment<FragmentOtherMapBinding>(R.layout.fra
     }
 
     private fun setMarkers() {
-        uploadPhotoViewModel.postList.observe(viewLifecycleOwner){
-            val keyTagMap = it.associate { post ->
-                PhotoItem(post.id, LatLng(post.latitude,post.longitude)) to null
+        uploadPhotoViewModel.postList.observe(viewLifecycleOwner) { postList ->
+            // Convert postList to PhotoItem list
+            val photoItems = postList.map { post ->
+                PhotoItem(post.id, LatLng(post.latitude, post.longitude))
             }
 
-            builder.minZoom(4).maxZoom(16)
+            Timber.d("마커 개수는 ${photoItems.size}")
 
-            builder.clusterMarkerUpdater(object : DefaultClusterMarkerUpdater() {
-                override fun updateClusterMarker(info: ClusterMarkerInfo, marker: Marker) {
-                    super.updateClusterMarker(info, marker)
-                    marker.icon = if (info.size < 3) {
-                        MarkerIcons.CLUSTER_LOW_DENSITY
-                    } else {
-                        MarkerIcons.CLUSTER_MEDIUM_DENSITY
+            context?.let { context ->
+                TedNaverClustering.with<PhotoItem>(context, naverMap)
+                    .customMarker { // Customize the marker icon
+                        Marker().apply {
+                            icon = OverlayImage.fromResource(R.drawable.photomarker)
+                            width = 220
+                            height = 220
+                        }
                     }
-                }
-            }).leafMarkerUpdater(object : DefaultLeafMarkerUpdater() {
-                override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
-                    super.updateLeafMarker(info, marker)
-                    marker.icon = OverlayImage.fromResource(com.mapcok.R.drawable.photomarker)
-                    marker.width = 220
-                    marker.height = 220
-                    marker.onClickListener = Overlay.OnClickListener {
-                        if (it is Marker) {
-                            val photoItem = keyTagMap.keys.find { item -> item.position == it.position }
-                            val id = photoItem?.id
-                            if (photoItem != null) {
-                                Timber.d("마커 확인 클릭")
-                                uploadPhotoViewModel.setMarkerClick(true)
-                                uploadPhotoViewModel.getPhotoById(args.userId,photoItem.id)
-                            }
-                            val clickedLatLng = it.position
-                            val cameraUpdate =
-                                CameraUpdate.scrollAndZoomTo(clickedLatLng, 18.0).animate(
-                                    CameraAnimation.Easing)
+                    .markerClickListener { markerItem -> // Handle marker click
+                        if (markerItem is PhotoItem) {
+                            val clickedLatLng = LatLng(markerItem.getTedLatLng().latitude, markerItem.getTedLatLng().longitude)
+                            val cameraUpdate = CameraUpdate.scrollAndZoomTo(clickedLatLng, 18.0).animate(CameraAnimation.Easing)
                             naverMap.moveCamera(cameraUpdate)
+
+                            Timber.d("마커 확인 클릭")
+                            uploadPhotoViewModel.setMarkerClick(true)
+                            uploadPhotoViewModel.getPhotoById(args.userId, markerItem.id)
+
                         }
                         true
                     }
-                }
-            })
-
-            val clusterer: Clusterer<PhotoItem> = builder.build()
-            clusterer.addAll(keyTagMap)
-            clusterer.map = naverMap
+                    .minClusterSize(2) // Minimum cluster size
+                    .clickToCenter(true) // Center map on marker click
+                    .items(photoItems) // Set the items for clustering
+                    .make() // Make the clustering
+            }
         }
     }
+
+
 
     private fun observeSelectMarker() { //마커 클릭시 이미지랑 content
         uploadPhotoViewModel.selectedPost.observe(viewLifecycleOwner) {

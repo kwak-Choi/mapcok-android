@@ -38,7 +38,6 @@ abstract class BaseMapFragment<T : ViewDataBinding>(private val layoutResId: Int
     override fun onMapReady(naverMap: NaverMap) {
         Timber.d("onMapReady 호출됨! $naverMap")
         initOnMapReady(naverMap)
-
     }
 
     abstract fun initOnMapReady(naverMap : NaverMap)
@@ -47,6 +46,11 @@ abstract class BaseMapFragment<T : ViewDataBinding>(private val layoutResId: Int
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated 호출됨! $mapView")
         initViewCreated()
+        mapView?.onCreate(savedInstanceState)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     abstract fun initViewCreated()
