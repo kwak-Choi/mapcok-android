@@ -26,9 +26,11 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_main"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="65dp"
         android:layout_gravity="bottom"
-        android:backgroundTint="@null"
+        android:backgroundTint="@color/white"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
         app:itemBackground="@null"
         app:itemRippleColor="@null"
         app:labelVisibilityMode="labeled"

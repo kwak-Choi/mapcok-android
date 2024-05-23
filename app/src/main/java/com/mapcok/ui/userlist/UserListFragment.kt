@@ -37,12 +37,12 @@ class UserListFragment : BaseFragment<FragmentUserListBinding>(R.layout.fragment
 
     private fun initAdapter() {
         userListAdapter = UserListAdapter { userId, userName ->
-           findNavController().navigate(R.id.action_userListFragment_to_otherMapFragment,
-               bundleOf(
-                   "userId" to userId,
-                   "userName" to userName
-               )
-           )
+            findNavController().navigate(R.id.action_userListFragment_to_otherMapFragment,
+                bundleOf(
+                    "userId" to userId,
+                    "userName" to userName
+                )
+            )
         }
         binding.rcUserList.adapter = userListAdapter
     }
